@@ -60,6 +60,7 @@ func main() {
 
 	/* Route */
 	router.ConfigRouter(app)
+	router.AuthRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
 
