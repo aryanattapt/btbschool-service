@@ -8,6 +8,6 @@ import (
 )
 
 func ConfigRouter(app *fiber.App) {
-	configRouter := app.Group("/config", middleware.JWTAuthMiddleware())
+	configRouter := app.Group("/config", middleware.BasicAuthMiddleware())
 	configRouter.All("/:type", controller.ConfigController)
 }

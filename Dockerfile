@@ -17,6 +17,7 @@ WORKDIR /app/btb-service
 # ENV REDIS_PASSWORD=""
 # ENV ASSET_PATH="./assets"
 # ENV UPLOAD_PATH="./uploads"
+# ENV JWT_SIGNATURE_KEY = SIGNATURE
 
 # Copies everything from your root directory into /app
 COPY . .

@@ -1,7 +1,10 @@
 package middleware
 
 import (
+	"btb-service/pkg"
+	"btb-service/repository"
 	"btb-service/service"
+	"strings"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -16,8 +19,9 @@ func BasicAuthMiddleware() fiber.Handler {
 		Realm: "Forbidden",
 		Unauthorized: func(ctx *fiber.Ctx) error {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"message": "Sorry, Unauthorized Access",
-				"error":   "INVALID_AUTH",
+				"error":      "AUTH.INVALIDTOKEN.EXCEPTION",
+				"message":    "Sorry, Unauthorized Access",
+				"stacktrace": "Invalid token",
 			})
 		},
 		ContextUsername: "_user",
@@ -30,9 +34,44 @@ func JWTAuthMiddleware() fiber.Handler {
 		SigningKey: jwtware.SigningKey{Key: service.JWT_SIGNATURE_KEY},
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"message": "Sorry, Unauthorized Access",
-				"error":   "INVALID_AUTH",
+				"error":      "AUTH.INVALIDTOKEN.EXCEPTION",
+				"message":    "Sorry, Unauthorized Access",
+				"stacktrace": err.Error(),
 			})
+		},
+		SuccessHandler: func(ctx *fiber.Ctx) error {
+			result, err := service.ValidateJWTToken(strings.Split(string(ctx.Request().Header.Peek("Authorization")), " ")[1])
+			if err != nil {
+				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+					"error":      "AUTH.INVALIDTOKEN.EXCEPTION",
+					"message":    "Invalid Token!",
+					"stacktrace": err.Error(),
+				})
+			}
+
+			userDataList, err := repository.GetUserById(pkg.DecodeBase64(result["aud"].(string)))
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":      "AUTH.USERQUERY.EXCEPTION",
+					"message":    "Failed to validate user data!",
+					"stacktrace": err.Error(),
+				})
+			}
+
+			if len(userDataList) == 0 {
+				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+					"error":      "AUTH.USERNOTEXIST.EXCEPTION",
+					"message":    "Sorry, User is not exist in database!",
+					"stacktrace": "User is not exist",
+				})
+			}
+
+			var userData map[string]interface{} = userDataList[0]
+			delete(userData, "password")
+			delete(userData, "isactive")
+
+			ctx.Locals("jwtauth", userData)
+			return ctx.Next()
 		},
 	})
 }

@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var mongoDBConfigRepository = pkg.MongoDBDatabase{DatabaseName: "client_configs"}
+var mongoDBConfigRepository = pkg.MongoDBDatabase{DatabaseName: "btb_server"}
 
 type ConfigRepositoryModel struct {
 	model.ConfigModel

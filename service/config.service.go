@@ -13,8 +13,9 @@ func GetConfigs(ctx *fiber.Ctx) error {
 	var tipe string = ctx.Params("type")
 	if pkg.IsEmptyString(tipe) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Please define type!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "FETCHCONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Please define Param!",
+			"stacktrace": "Param is not exist",
 		})
 	}
 
@@ -22,15 +23,17 @@ func GetConfigs(ctx *fiber.Ctx) error {
 	data, err := service.GetConfig()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
+			"message":    "Failed to get config data!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	if data == nil || len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Sorry, we can't find any data. Please try again later!",
-			"error":   "DATA_NOT_FOUND",
+			"error":      "FETCHCONFIG.CONFIGNOTEXIST.EXCEPTION",
+			"message":    "Sorry, we can't find any data. Please try again later!",
+			"stacktrace": "Data not found",
 		})
 	}
 
@@ -44,24 +47,27 @@ func UpsertConfig(ctx *fiber.Ctx) error {
 	var tipe string = ctx.Params("type")
 	if pkg.IsEmptyString(tipe) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Please define type!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SAVECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Please define Param!",
+			"stacktrace": "Param is not exist",
 		})
 	}
 
 	var payload = &model.ConfigRequestPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Sorry, System can't parse your data! Please Recheck!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SAVECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Sorry, System can't parse your data! Please Recheck!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SAVECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Parameter is required!",
+			"stacktrace": err.Error(),
 		})
 	}
 
@@ -76,13 +82,14 @@ func UpsertConfig(ctx *fiber.Ctx) error {
 	var service = repository.ConfigRepositoryModel{ConfigModel: model.ConfigModel{Type: tipe, Payload: m}}
 	if err := service.UpsertConfig(); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "SAVECONFIG.UPSERTCONFIG.EXCEPTION",
+			"message":    "Failed to save config!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success upsert config",
+		"message": "Success save config",
 	})
 }
 
@@ -90,24 +97,27 @@ func DeleteConfig(ctx *fiber.Ctx) error {
 	var tipe string = ctx.Params("type")
 	if pkg.IsEmptyString(tipe) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Please define type!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "DELETCONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Please define Param!",
+			"stacktrace": "Param is not exist",
 		})
 	}
 
 	var payload = &model.ConfigRequestPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Sorry, System can't parse your data! Please Recheck!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "DELETECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Sorry, System can't parse your data! Please Recheck!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_PAYLOAD",
+			"error":      "DELETECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Parameter is required!",
+			"stacktrace": err.Error(),
 		})
 	}
 
@@ -122,8 +132,9 @@ func DeleteConfig(ctx *fiber.Ctx) error {
 	var service = repository.ConfigRepositoryModel{ConfigModel: model.ConfigModel{Type: tipe, Payload: m}}
 	if err := service.DeleteConfig(); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "DELETCONFIG.PURGECONFIG.EXCEPTION",
+			"message":    "Failed to delete config!",
+			"stacktrace": err.Error(),
 		})
 	}
 

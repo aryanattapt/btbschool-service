@@ -4,7 +4,6 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"btb-service/repository"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -16,31 +15,35 @@ func SignUp(ctx *fiber.Ctx) error {
 	var payload = &model.UserInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Sorry, System can't parse your data! Please Recheck!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Sorry, System can't parse your data! Please Recheck!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Parameter is required!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	data, err := repository.GetUserByUsernameOrEmail(payload.Username, payload.Username)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "SIGNUP.USERQUERY.EXCEPTION",
+			"message":    "Failed to validate user data!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	if len(data) != 0 {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "Sorry, User is already exist in database!",
-			"error":   "INVALID_AUTH",
+			"error":      "SIGNUP.USEREXIST.EXCEPTION",
+			"message":    "Sorry, User is already exist in database!",
+			"stacktrace": "User is already exist",
 		})
 	}
 
@@ -48,8 +51,9 @@ func SignUp(ctx *fiber.Ctx) error {
 	payload.IsActive = true
 	if err := repository.SaveUser(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "SIGNUP.REGISTERUSER.EXCEPTION",
+			"message":    "Failed to signup!",
+			"stacktrace": err.Error(),
 		})
 	}
 
@@ -62,38 +66,43 @@ func SignIn(ctx *fiber.Ctx) error {
 	var payload = &model.SignInPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Sorry, System can't parse your data! Please Recheck!",
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Sorry, System can't parse your data! Please Recheck!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_PAYLOAD",
+			"error":      "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Parameter is required!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	data, err := repository.GetUserByUsernameOrEmail(payload.Username, payload.Username)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
+			"error":      "SIGNIN.USERQUERY.EXCEPTION",
+			"message":    "Failed to validate user data!",
+			"stacktrace": err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Sorry, User is not exist in database!",
-			"error":   "INVALID_AUTH",
+			"error":      "SIGNIN.USERNOTEXIST.EXCEPTION",
+			"message":    "Sorry, User is not exist in database!",
+			"stacktrace": "User is not exist",
 		})
 	}
 
 	if !pkg.ComparePasswordBCrypt(payload.Password, data[0]["password"].(string)) {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "Sorry, Invalid Password!",
-			"error":   "INVALID_AUTH",
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":      "SIGNIN.INVALIDPASSWORD.EXCEPTION",
+			"message":    "Password not match!",
+			"stacktrace": "Incorrect Password!",
 		})
 	}
 
@@ -110,8 +119,9 @@ func SignIn(ctx *fiber.Ctx) error {
 	jwtToken, err, expiredDate := jwtPayload.CreateJWTToken()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_AUTH",
+			"error":      "SIGNIN.TOKEN.EXCEPTION",
+			"message":    "Failed generate token!",
+			"stacktrace": err.Error(),
 		})
 	}
 
@@ -126,36 +136,8 @@ func SignIn(ctx *fiber.Ctx) error {
 }
 
 func Validate(ctx *fiber.Ctx) error {
-	result, err := ValidateJWTToken(strings.Split(string(ctx.Request().Header.Peek("Authorization")), " ")[1])
-	if err != nil {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "INVALID_AUTH",
-		})
-	}
-
-	userDataList, err := repository.GetUserById(pkg.DecodeBase64(result["aud"].(string)))
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
-			"error":   "QUERY_EXCEPTION",
-		})
-	}
-
-	if len(userDataList) == 0 {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "Sorry, User is not exist in database!",
-			"error":   "INVALID_AUTH",
-		})
-	}
-
-	var userData map[string]interface{} = userDataList[0]
-	delete(userData, "_id")
-	delete(userData, "password")
-	delete(userData, "isactive")
-
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Success Validate Token!",
-		"data":    userData,
+		"data":    ctx.Locals("jwtauth"),
 	})
 }

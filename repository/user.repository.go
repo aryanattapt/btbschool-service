@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	mongoDBUserRepository = pkg.MongoDBDatabase{DatabaseName: "btb_masters", CollectionName: "users"}
+	mongoDBUserRepository = pkg.MongoDBDatabase{DatabaseName: "btb_client", CollectionName: "users"}
 )
 
 func GetUserByUsernameOrEmail(username string, email string) (data []map[string]interface{}, err error) {

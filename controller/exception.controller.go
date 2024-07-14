@@ -4,15 +4,15 @@ import "github.com/gofiber/fiber/v2"
 
 func MethodNotAllowedRoute(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusMethodNotAllowed).JSON(fiber.Map{
+		"error":   "ROUTER.METHODNOTALLOWED.EXCEPTION",
 		"message": "Sorry, method is not allowed in this URL!",
-		"error":   "METHOD_NOT_ALLOWED",
 	})
 }
 
 func NotFoundRoute(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		"error":   "ROUTER.ROUTENOTFOUND.EXCEPTION",
 		"message": "Sorry, destination not found",
-		"error":   "ROUTE_NOT_FOUND",
 	})
 }
 

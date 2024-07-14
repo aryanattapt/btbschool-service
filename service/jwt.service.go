@@ -15,7 +15,7 @@ type JWTPayload struct {
 }
 
 var (
-	JWT_LOGIN_EXPIRATION_DURATION = time.Duration(12) * time.Hour
+	JWT_LOGIN_EXPIRATION_DURATION = time.Duration(24) * time.Hour
 	JWT_SIGNING_METHOD            = jwt.SigningMethodHS384
 	JWT_SIGNATURE_KEY             = []byte(os.Getenv("JWT_SIGNATURE_KEY"))
 )
