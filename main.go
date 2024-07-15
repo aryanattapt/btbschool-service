@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
@@ -49,6 +50,7 @@ func main() {
 	app.Use(logger.New(logger.Config{
 		Format: "${ip}:${port} -> ${status} ${method} ${path}\n",
 	}))
+	app.Use(cors.New(cors.ConfigDefault))
 	app.Use(recover.New())
 	app.Use(healthcheck.New())
 	app.Use(helmet.New(helmet.ConfigDefault))
