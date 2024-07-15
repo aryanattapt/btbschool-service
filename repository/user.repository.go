@@ -16,7 +16,6 @@ var (
 func GetUserByUsernameOrEmail(username string, email string) (data []map[string]interface{}, err error) {
 	mongoDBUserRepository.Filter = bson.M{
 		"isactive": true,
-		"username": username,
 		"$or": bson.A{
 			bson.M{"username": username},
 			bson.M{"email": email},

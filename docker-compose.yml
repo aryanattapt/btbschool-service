@@ -1,7 +1,7 @@
 services:
-  btb-service:
-    image: btb-service:latest
-    container_name: btb-service
+  btbschool-service:
+    image: btbschool-service:latest
+    container_name: btbschool-service
     build:
       context: . # Use an image built from the specified dockerfile in the current directory.
       dockerfile: Dockerfile
@@ -13,8 +13,8 @@ services:
       - "30001:30001"
     restart: always
     volumes:
-      - ~/../apps/assets:/app/btb-service/assets
-      - ~/../apps/uploads:/app/btb-service/uploads
+      - ~/../apps/assets:/app/btbschool-service/assets
+      - ~/../apps/uploads:/app/btbschool-service/uploads
     deploy:
       resources:
         limits:
