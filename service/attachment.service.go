@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -33,15 +34,15 @@ func UploadAttachment(ctx *fiber.Ctx) error {
 	for formFieldName, fileHeaders := range form.File {
 		for _, file := range fileHeaders {
 			filename := strings.Replace(pkg.GenerateUUID(), "-", "", -1)
-			fileExt := strings.Split(file.Filename, ".")[1]
-			image := fmt.Sprintf("%s.%s", filename, fileExt)
+			fileExt := path.Ext(file.Filename)
+			fileName := fmt.Sprintf("%s.%s", filename, fileExt)
 
 			os.MkdirAll(fmt.Sprintf("%s/%s/%s", "./uploads", param, formFieldName), os.ModePerm)
-			err = ctx.SaveFile(file, fmt.Sprintf("%s/%s/%s/%s", "./uploads", param, formFieldName, image))
+			err = ctx.SaveFile(file, fmt.Sprintf("%s/%s/%s/%s", "./uploads", param, formFieldName, fileName))
 
 			temp := map[string]interface{}{
-				"fileName":     image,
-				"fileURL":      fmt.Sprintf("%s/%s/%s/%s/%s", os.Getenv("API_BASE_URL"), "uploads", param, formFieldName, image),
+				"fileName":     fileName,
+				"fileURL":      fmt.Sprintf("%s/%s/%s/%s/%s", os.Getenv("API_BASE_URL"), "uploads", param, formFieldName, fileName),
 				"fileMetadata": file.Header,
 				"fileSize":     file.Size,
 			}
