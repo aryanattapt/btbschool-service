@@ -8,35 +8,35 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetAlumni(ctx *fiber.Ctx) error {
-	data, err := repository.GetAlumni()
+func GetCareerApplicantData(ctx *fiber.Ctx) error {
+	data, err := repository.GetCareerApplicantData()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.ALUMNIQUERY.EXCEPTION",
-			"message":    "Failed to get alumni data!",
+			"error":      "CAREER.APPLICANTQUERY.EXCEPTION",
+			"message":    "Failed to get applicant data!",
 			"stacktrace": err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":      "ALUMNI.NOTEXIST.EXCEPTION",
-			"message":    "Sorry, Alumni Data isn't exist!",
-			"stacktrace": "Alumni data is not exist",
+			"error":      "CAREER.APPLICANTNOTEXIST.EXCEPTION",
+			"message":    "Sorry, Applicant Data isn't exist!",
+			"stacktrace": "Applicant data is not exist",
 		})
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success get alumni!",
+		"message": "Success get Applicant Data!",
 		"data":    data,
 	})
 }
 
-func SubmitAlumni(ctx *fiber.Ctx) error {
-	var payload = &model.AlumniInsertPayload{}
+func ApplyCareer(ctx *fiber.Ctx) error {
+	var payload = &model.CareerApplyInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"error":      "CAREER.APPLICANTINVALIDPAYLOAD.EXCEPTION",
 			"message":    "Sorry, System can't parse your data! Please Recheck!",
 			"stacktrace": err.Error(),
 		})
@@ -45,22 +45,22 @@ func SubmitAlumni(ctx *fiber.Ctx) error {
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"error":      "CAREER.APPLICANTINVALIDPAYLOAD.EXCEPTION",
 			"message":    "Parameter is required!",
 			"stacktrace": err.Error(),
 		})
 	}
 
-	err := repository.SaveAlumni(*payload)
+	err := repository.ApplyCareer(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.SUBMIT.EXCEPTION",
-			"message":    "Failed to submit Alumni data!",
+			"error":      "CAREER.APPLICANTSUBMIT.EXCEPTION",
+			"message":    "Failed to apply Career!",
 			"stacktrace": err.Error(),
 		})
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "Success submit Alumni!",
+		"message": "Success submit data!",
 	})
 }

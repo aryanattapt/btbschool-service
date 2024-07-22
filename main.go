@@ -64,6 +64,7 @@ func main() {
 	/* Route */
 	app.Static("/uploads", os.Getenv("UPLOAD_PATH"))
 	app.Static("/assets", os.Getenv("ASSET_PATH"))
+	router.CareerRouter(app)
 	router.ConfigRouter(app)
 	router.AuthRouter(app)
 	router.ContactRouter(app)
