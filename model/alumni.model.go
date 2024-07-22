@@ -9,6 +9,5 @@ type AlumniInsertPayload struct {
 	StatusKerjaOptions string                   `bson:"statusKerjaOptions,omitempty" json:"statusKerjaOptions,omitempty" validate:"required"`
 	Phoneno            string                   `bson:"phoneno,omitempty" json:"phoneno,omitempty" validate:"required,e164"`
 	Email              string                   `bson:"email,omitempty" json:"email,omitempty" validate:"required,email"`
-	Message            string                   `bson:"message,omitempty" json:"message,omitempty" validate:"required,min=3"`
 	Attachment         []map[string]interface{} `bson:"attachment,omitempty" json:"attachment,omitempty"`
 }
