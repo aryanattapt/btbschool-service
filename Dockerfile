@@ -23,6 +23,7 @@ ENV MAIL_SMTP_PORT=""
 ENV MAIL_SENDER_NAME=""
 ENV MAIL_AUTH_EMAIL=""
 ENV MAIL_AUTH_PASSWORD=""
+ENV API_BASE_URL="localhost:30001"
 
 # Copies everything from your root directory into /app
 COPY . .

@@ -7,7 +7,7 @@ type ContactInsertPayload struct {
 	LastName       string             `bson:"lastname,omitempty" json:"lastname,omitempty"`
 	Phoneno        string             `bson:"phoneno,omitempty" json:"phoneno,omitempty" validate:"required,e164"`
 	Email          string             `bson:"email,omitempty" json:"email,omitempty" validate:"required,email"`
-	Message        string             `bson:"message,omitempty" json:"message,omitempty" validate:"required,min=3,max=30"`
+	Message        string             `bson:"message,omitempty" json:"message,omitempty" validate:"required,min=3"`
 	RegisteredDate primitive.DateTime `bson:"registereddate,omitempty" json:"registereddate,omitempty"`
 	UpdatedDate    primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
 }

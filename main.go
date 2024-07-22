@@ -62,9 +62,13 @@ func main() {
 	}))
 
 	/* Route */
+	app.Static("/uploads", os.Getenv("UPLOAD_PATH"))
+	app.Static("/assets", os.Getenv("ASSET_PATH"))
 	router.ConfigRouter(app)
 	router.AuthRouter(app)
 	router.ContactRouter(app)
+	router.AlumniRouter(app)
+	router.AttachmentsRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
 
