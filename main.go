@@ -29,6 +29,7 @@ func main() {
 
 	/* Initialize Fiber */
 	app := fiber.New(fiber.Config{
+		BodyLimit:     128 * 1024 * 1024,
 		CaseSensitive: true,
 		StrictRouting: false,
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
