@@ -45,7 +45,8 @@ func UploadAttachment(ctx *fiber.Ctx) error {
 				"fileURL":      fmt.Sprintf("%s/%s/%s/%s/%s", os.Getenv("API_BASE_URL"), "uploads", param, formFieldName, fileName),
 				"fileMetadata": file.Header,
 				"fileSize":     file.Size,
-				"param":        param,
+				"category":     param,
+				"type":         formFieldName,
 			}
 
 			if err == nil {

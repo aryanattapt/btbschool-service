@@ -50,7 +50,13 @@ func main() {
 	app.Use(logger.New(logger.Config{
 		Format: "${ip}:${port} -> ${status} ${method} ${path}\n",
 	}))
-	app.Use(cors.New(cors.ConfigDefault))
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowCredentials: false,
+		AllowMethods:     "*",
+		AllowHeaders:     "*",
+		MaxAge:           0,
+	}))
 	app.Use(recover.New())
 	app.Use(healthcheck.New())
 	app.Use(helmet.New(helmet.ConfigDefault))
@@ -70,6 +76,7 @@ func main() {
 	router.ContactRouter(app)
 	router.AlumniRouter(app)
 	router.AttachmentsRouter(app)
+	router.StudentRegistrationRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
 
