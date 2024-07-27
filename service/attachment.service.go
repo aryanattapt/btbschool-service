@@ -8,6 +8,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -54,6 +55,152 @@ func UploadAttachment(ctx *fiber.Ctx) error {
 			} else {
 				log.Printf("Failed upload data: %s", err.Error())
 			}
+		}
+	}
+
+	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "Success submit attachment data!",
+		"data":    data,
+	})
+}
+
+func UploadAttachmentS3(ctx *fiber.Ctx) error {
+	var param string = ctx.Params("param")
+	if pkg.IsEmptyString(param) {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":      "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Please define Param!",
+			"stacktrace": "Param is not exist",
+		})
+	}
+
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message":    "Failed to submit attachment data!",
+			"stacktrace": err.Error(),
+		})
+	}
+
+	session, err := CreateSessionS3()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message":    "Failed to open session!",
+			"stacktrace": err.Error(),
+		})
+	}
+
+	var data []map[string]interface{}
+	for formFieldName, fileHeaders := range form.File {
+		for _, file := range fileHeaders {
+			filename := strings.Replace(pkg.GenerateUUID(), "-", "", -1)
+			fileExt := path.Ext(file.Filename)
+			fileName := fmt.Sprintf("%s.%s", filename, fileExt)
+
+			theFile, err := file.Open()
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message":    "Failed to open attachment data!",
+					"stacktrace": err.Error(),
+				})
+			}
+			defer theFile.Close()
+
+			uploader := s3manager.NewUploader(session)
+			uploadFileResult, err := UploadFileS3(uploader, theFile, "uploads", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message":    "Failed to upload file!",
+					"stacktrace": err.Error(),
+				})
+			}
+
+			temp := map[string]interface{}{
+				"fileName":     fileName,
+				"fileURL":      uploadFileResult.Location,
+				"fileMetadata": file.Header,
+				"fileSize":     file.Size,
+				"category":     param,
+				"type":         formFieldName,
+			}
+			data = append(data, temp)
+		}
+	}
+
+	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "Success submit attachment data!",
+		"data":    data,
+	})
+}
+
+func UploadAssetsS3(ctx *fiber.Ctx) error {
+	var param string = ctx.Params("param")
+	if pkg.IsEmptyString(param) {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":      "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Please define Param!",
+			"stacktrace": "Param is not exist",
+		})
+	}
+
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message":    "Failed to submit attachment data!",
+			"stacktrace": err.Error(),
+		})
+	}
+
+	session, err := CreateSessionS3()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message":    "Failed to open session!",
+			"stacktrace": err.Error(),
+		})
+	}
+
+	var data []map[string]interface{}
+	for formFieldName, fileHeaders := range form.File {
+		for _, file := range fileHeaders {
+			filename := strings.Replace(pkg.GenerateUUID(), "-", "", -1)
+			fileExt := path.Ext(file.Filename)
+			fileName := fmt.Sprintf("%s.%s", filename, fileExt)
+
+			theFile, err := file.Open()
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message":    "Failed to open attachment data!",
+					"stacktrace": err.Error(),
+				})
+			}
+			defer theFile.Close()
+
+			uploader := s3manager.NewUploader(session)
+			uploadFileResult, err := UploadFileS3(uploader, theFile, "assets", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message":    "Failed to upload file!",
+					"stacktrace": err.Error(),
+				})
+			}
+
+			temp := map[string]interface{}{
+				"fileName":     fileName,
+				"fileURL":      uploadFileResult.Location,
+				"fileMetadata": file.Header,
+				"fileSize":     file.Size,
+				"category":     param,
+				"type":         formFieldName,
+			}
+			data = append(data, temp)
 		}
 	}
 

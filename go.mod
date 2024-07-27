@@ -13,7 +13,9 @@ require (
 
 require (
 	github.com/MicahParks/keyfunc/v2 v2.1.0 // indirect
+	github.com/aws/aws-sdk-go v1.55.3 // indirect
 	github.com/gofiber/contrib/jwt v1.0.10 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 )
 
 require (
