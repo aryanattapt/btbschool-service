@@ -110,7 +110,7 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 			defer theFile.Close()
 
 			uploader := s3manager.NewUploader(session)
-			uploadFileResult, err := UploadFileS3(uploader, theFile, "uploads", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
+			_, err = UploadFileS3(uploader, theFile, "uploads", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
@@ -121,7 +121,7 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 
 			temp := map[string]interface{}{
 				"fileName":     fileName,
-				"fileURL":      uploadFileResult.Location,
+				"fileURL":      fmt.Sprintf("%s/%s/%s/%s", "https://w6i8.c1.e2-7.dev/uploads", param, formFieldName, fileName),
 				"fileMetadata": file.Header,
 				"fileSize":     file.Size,
 				"category":     param,
@@ -183,7 +183,7 @@ func UploadAssetsS3(ctx *fiber.Ctx) error {
 			defer theFile.Close()
 
 			uploader := s3manager.NewUploader(session)
-			uploadFileResult, err := UploadFileS3(uploader, theFile, "assets", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
+			_, err = UploadFileS3(uploader, theFile, "assets", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
@@ -194,7 +194,7 @@ func UploadAssetsS3(ctx *fiber.Ctx) error {
 
 			temp := map[string]interface{}{
 				"fileName":     fileName,
-				"fileURL":      uploadFileResult.Location,
+				"fileURL":      fmt.Sprintf("%s/%s/%s/%s", "https://w6i8.c1.e2-7.dev/uploads", param, formFieldName, fileName),
 				"fileMetadata": file.Header,
 				"fileSize":     file.Size,
 				"category":     param,

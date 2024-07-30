@@ -57,3 +57,16 @@ func UpdateUser(payload model.UserUpdatePayload) (err error) {
 	err = mongoDBUserRepository.UpdateMongoDB()
 	return
 }
+
+func GetAllUser(searchPayload map[string]interface{}) (data []map[string]interface{}, err error) {
+	idPayload, ok := searchPayload["_id"].(string)
+	if ok {
+		id, _ := primitive.ObjectIDFromHex(idPayload)
+		delete(searchPayload, "_id")
+		mongoDBUserRepository.Filter = bson.D{{Key: "_id", Value: id}}
+	} else {
+		mongoDBUserRepository.Filter = searchPayload
+	}
+	data, err = mongoDBUserRepository.GetMongoDB()
+	return
+}

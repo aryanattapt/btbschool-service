@@ -15,9 +15,17 @@ type ConfigRepositoryModel struct {
 	model.ConfigModel
 }
 
-func (payload ConfigRepositoryModel) GetConfig() (data []map[string]interface{}, err error) {
+func (payload ConfigRepositoryModel) GetConfig(searchPayload map[string]interface{}) (data []map[string]interface{}, err error) {
+	idPayload, ok := searchPayload["_id"].(string)
+	if ok {
+		id, _ := primitive.ObjectIDFromHex(idPayload)
+		delete(searchPayload, "_id")
+		mongoDBConfigRepository.Filter = bson.D{{Key: "_id", Value: id}}
+	} else {
+		mongoDBConfigRepository.Filter = searchPayload
+	}
+
 	mongoDBConfigRepository.CollectionName = payload.Type
-	mongoDBConfigRepository.Filter = bson.D{{}}
 	data, err = mongoDBConfigRepository.GetMongoDB()
 	return
 }

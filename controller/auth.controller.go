@@ -35,3 +35,15 @@ func Validate(ctx *fiber.Ctx) error {
 		return MethodNotAllowedRoute(ctx)
 	}
 }
+
+func GetOrUpdateUser(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.GetAllUser(ctx)
+	} else if ctx.Method() == "PUT" || ctx.Method() == "PATCH" {
+		return service.UpdateUser(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}

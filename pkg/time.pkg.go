@@ -1,6 +1,8 @@
 package pkg
 
-import "time"
+import (
+	"time"
+)
 
 func GenerateCurrentTimeStamp() string {
 	return time.Now().Format(time.RFC3339Nano)
@@ -21,4 +23,32 @@ func ParseAndFormatTime(data string, fromFormat string, toFormat string) (string
 	}
 
 	return parsedTime.Format(toFormat), nil
+}
+
+func CompareIsoDateStringToNow(isoDateString string) (result int, err error) {
+	// Define the layout for the ISO 8601 date string
+	layout := time.RFC3339
+
+	// Parse the ISO 8601 date string
+	parsedTime, err := time.Parse(layout, isoDateString)
+	if err != nil {
+		return
+	}
+
+	// Get the current date
+	now := time.Now().UTC()
+
+	// Create new time.Time objects representing the date part only
+	parsedDate := time.Date(parsedTime.Year(), parsedTime.Month(), parsedTime.Day(), 0, 0, 0, 0, time.UTC)
+	currentDate := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+
+	// Compare the dates
+	if parsedDate.Before(currentDate) {
+		result = -1
+	} else if parsedDate.After(currentDate) {
+		result = 1
+	} else {
+		result = 0
+	}
+	return
 }

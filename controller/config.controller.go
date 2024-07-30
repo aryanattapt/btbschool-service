@@ -7,9 +7,9 @@ import (
 )
 
 func ConfigController(ctx *fiber.Ctx) error {
-	if ctx.Method() == "GET" {
+	if ctx.Method() == "POST" {
 		return service.GetConfigs(ctx)
-	} else if ctx.Method() == "POST" || ctx.Method() == "PUT" || ctx.Method() == "PATCH" {
+	} else if ctx.Method() == "PUT" || ctx.Method() == "PATCH" {
 		return service.UpsertConfig(ctx)
 	} else if ctx.Method() == "DELETE" {
 		return service.DeleteConfig(ctx)

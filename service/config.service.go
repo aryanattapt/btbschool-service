@@ -19,8 +19,17 @@ func GetConfigs(ctx *fiber.Ctx) error {
 		})
 	}
 
+	var payload = &map[string]interface{}{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":      "FETCHCONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message":    "Sorry, System can't parse your data! Please Recheck!",
+			"stacktrace": err.Error(),
+		})
+	}
+
 	var service = repository.ConfigRepositoryModel{ConfigModel: model.ConfigModel{Type: tipe}}
-	data, err := service.GetConfig()
+	data, err := service.GetConfig(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":      "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
@@ -29,7 +38,7 @@ func GetConfigs(ctx *fiber.Ctx) error {
 		})
 	}
 
-	if data == nil || len(data) == 0 {
+	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error":      "FETCHCONFIG.CONFIGNOTEXIST.EXCEPTION",
 			"message":    "Sorry, we can't find any data. Please try again later!",
