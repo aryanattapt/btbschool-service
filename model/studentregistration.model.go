@@ -65,6 +65,6 @@ type StudentRegistrationInsertPayload struct {
 	Updateddate                 primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
 }
 
-type StudentRegistrationOutstandingDataPayload struct {
+type DraftStudentRegistrationData struct {
 	RegistrationCode string `bson:"registrationcode,omitempty" json:"registrationcode,omitempty"`
 }

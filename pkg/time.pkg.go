@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"log"
 	"time"
 )
 
@@ -41,6 +42,8 @@ func CompareIsoDateStringToNow(isoDateString string) (result int, err error) {
 	// Create new time.Time objects representing the date part only
 	parsedDate := time.Date(parsedTime.Year(), parsedTime.Month(), parsedTime.Day(), 0, 0, 0, 0, time.UTC)
 	currentDate := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	log.Println("parsed date: ", parsedDate)
+	log.Println("current date: ", currentDate)
 
 	// Compare the dates
 	if parsedDate.Before(currentDate) {

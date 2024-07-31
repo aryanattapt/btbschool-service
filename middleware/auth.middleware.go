@@ -70,7 +70,7 @@ func JWTAuthMiddleware() fiber.Handler {
 			delete(userData, "password")
 			delete(userData, "isactive")
 
-			ctx.Locals("jwtauth", userData)
+			ctx.Locals("userauth", userData)
 			return ctx.Next()
 		},
 	})

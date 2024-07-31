@@ -29,14 +29,14 @@ func ApplyCareer(payload model.CareerApplyInsertPayload) (err error) {
 func UpsertCareer(payload model.CareerUpsertPayload) (err error) {
 	mongodbCareerRepository.CollectionName = "career"
 	data, _ := pkg.StructToMap(payload)
-	mongoDBConfigRepository.Payload = data
+	mongodbCareerRepository.Payload = data
 	if pkg.IsEmptyString(payload.ID) {
-		err = mongoDBConfigRepository.InsertMongoDB()
+		err = mongodbCareerRepository.InsertMongoDB()
 	} else {
-		delete(mongoDBConfigRepository.Payload, "_id")
+		delete(mongodbCareerRepository.Payload, "_id")
 		id, _ := primitive.ObjectIDFromHex(payload.ID)
-		mongoDBConfigRepository.Filter = bson.D{{Key: "_id", Value: id}}
-		err = mongoDBConfigRepository.UpdateMongoDB()
+		mongodbCareerRepository.Filter = bson.D{{Key: "_id", Value: id}}
+		err = mongodbCareerRepository.UpdateMongoDB()
 	}
 	return
 }
@@ -54,17 +54,24 @@ func GetActiveCareer(searchPayload map[string]interface{}) (data []map[string]in
 
 	queryData, err := mongodbCareerRepository.GetMongoDB()
 	if err != nil {
+		log.Println(err.Error())
 		return
 	}
 
 	for _, v := range queryData {
-		maximumApplyDate := v["maximumApplyDate"].(string)
-		compareDate, err := pkg.CompareIsoDateStringToNow(maximumApplyDate)
-		if err != nil && compareDate >= 0 {
-			data = append(data, v)
+		maximumApplyDate, ok := v["maximumApplyDate"].(string)
+		if ok {
+			compareDate, err := pkg.CompareIsoDateStringToNow(maximumApplyDate)
+			if err != nil {
+				log.Println(err.Error())
+				continue
+			}
+
+			if compareDate >= 0 {
+				data = append(data, v)
+			}
 		} else {
-			log.Println("hasil compare date: ", compareDate)
-			log.Println(err.Error())
+			log.Println("not ok")
 		}
 	}
 
@@ -86,10 +93,10 @@ func GetAllCareer(searchPayload map[string]interface{}) (data []map[string]inter
 }
 
 func DeleteCareer(data model.CareerDeletePayload) (err error) {
-	mongoDBConfigRepository.CollectionName = "career"
+	mongodbCareerRepository.CollectionName = "career"
 	id, _ := primitive.ObjectIDFromHex(data.ID)
-	delete(mongoDBConfigRepository.Payload, "_id")
-	mongoDBConfigRepository.Filter = bson.D{{Key: "_id", Value: id}}
-	err = mongoDBConfigRepository.DeleteMongoDB()
+	delete(mongodbCareerRepository.Payload, "_id")
+	mongodbCareerRepository.Filter = bson.D{{Key: "_id", Value: id}}
+	err = mongodbCareerRepository.DeleteMongoDB()
 	return
 }

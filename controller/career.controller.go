@@ -8,7 +8,7 @@ import (
 
 func GetCareerApplicantData(ctx *fiber.Ctx) error {
 	if ctx.Method() == "GET" {
-		return service.GetCareerApplicantData(&fiber.Ctx{})
+		return service.GetCareerApplicantData(ctx)
 	} else if ctx.Method() == "OPTIONS" {
 		return NoContentRoute(ctx)
 	} else {
