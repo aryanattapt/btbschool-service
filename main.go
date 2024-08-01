@@ -4,6 +4,7 @@ import (
 	"btb-service/controller"
 	"btb-service/pkg"
 	"btb-service/router"
+	"btb-service/service"
 	"errors"
 	"fmt"
 	"log"
@@ -19,6 +20,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron"
 )
 
 func main() {
@@ -78,8 +80,14 @@ func main() {
 	router.AlumniRouter(app)
 	router.AttachmentsRouter(app)
 	router.StudentRegistrationRouter(app)
+	router.InstagramRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
+
+	/* Cron JOB */
+	cron := cron.New()
+	cron.AddFunc("@weekly", service.RefreshTokenInstagram)
+	cron.Start()
 
 	/* Start Server */
 	app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT")))

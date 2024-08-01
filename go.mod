@@ -16,6 +16,7 @@ require (
 	github.com/aws/aws-sdk-go v1.55.3 // indirect
 	github.com/gofiber/contrib/jwt v1.0.10 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/robfig/cron v1.2.0 // indirect
 )
 
 require (
