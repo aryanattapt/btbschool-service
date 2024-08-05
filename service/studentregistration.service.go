@@ -3,6 +3,7 @@ package service
 import (
 	"btb-service/model"
 	"btb-service/repository"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -51,27 +52,30 @@ func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 		})
 	}
 
-	var goValidator = validator.New()
-	if err := goValidator.Struct(payload); err != nil {
+	if payload.Status == "send" {
+		log.Println("validate form online registration")
+		var goValidator = validator.New()
+		if err := goValidator.Struct(payload); err != nil {
 
-		var errorMessage string
-		for _, err := range err.(validator.ValidationErrors) {
-			fieldName := err.StructField()
-			switch err.Tag() {
-			case "required":
-				errorMessage += fieldName + " is required.<br/>"
-			case "email":
-				errorMessage += fieldName + " must be a valid email address.<br/>"
-			default:
-				errorMessage += fieldName + " is invalid.<br/>"
+			var errorMessage string
+			for _, err := range err.(validator.ValidationErrors) {
+				fieldName := err.StructField()
+				switch err.Tag() {
+				case "required":
+					errorMessage += fieldName + " is required.<br/>"
+				case "email":
+					errorMessage += fieldName + " must be a valid email address.<br/>"
+				default:
+					errorMessage += fieldName + " is invalid.<br/>"
+				}
 			}
-		}
 
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "STUDENTREG.INVALIDPAYLOAD.EXCEPTION",
-			"message":    errorMessage,
-			"stacktrace": errorMessage,
-		})
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":      "STUDENTREG.INVALIDPAYLOAD.EXCEPTION",
+				"message":    errorMessage,
+				"stacktrace": errorMessage,
+			})
+		}
 	}
 
 	registrationCode, err := repository.SubmitDataStudentRegistration(*payload)

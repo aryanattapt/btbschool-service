@@ -13,6 +13,6 @@ func StudentRegistrationRouter(app *fiber.App) {
 	studentRegistrationRouter.All("/submit", middleware.BasicAuthMiddleware(), controller.SubmitDataStudentRegistration)
 	studentRegistrationRouter.All("/outstanding", middleware.JWTAuthMiddleware(), controller.GetStudentRegistrationOutstandingData)
 	studentRegistrationRouter.All("/outstanding/approve", middleware.JWTAuthMiddleware(), controller.ApproveStudentRegistrationOutstandingData)
-	studentRegistrationRouter.All("/", middleware.JWTAuthMiddleware(), controller.GetAllStudentRegistrationAuthData)
+	studentRegistrationRouter.All("/all", middleware.JWTAuthMiddleware(), controller.GetAllStudentRegistrationAuthData)
 	studentRegistrationRouter.All("/detail", middleware.JWTAuthMiddleware(), controller.GetStudentRegistrationDetailData)
 }

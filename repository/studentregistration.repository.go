@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -91,6 +92,7 @@ func GetAllStudentRegistrationAuthData(payload interface{}) (data []map[string]i
 		return
 	}
 
+	log.Println(userPayload)
 	if userPayload.Role == "admin" {
 		mongodbStudentRegistrationRepository.Filter = bson.M{}
 		data, err = mongodbStudentRegistrationRepository.GetMongoDB()
