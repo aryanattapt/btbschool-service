@@ -40,7 +40,16 @@ func JWTAuthMiddleware() fiber.Handler {
 			})
 		},
 		SuccessHandler: func(ctx *fiber.Ctx) error {
-			result, err := service.ValidateJWTToken(strings.Split(string(ctx.Request().Header.Peek("Authorization")), " ")[1])
+			var splitedToken = strings.Split(string(ctx.Request().Header.Peek("Authorization")), " ")
+			if len(splitedToken) == 0 {
+				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+					"error":      "AUTH.INVALIDTOKEN.EXCEPTION",
+					"message":    "Invalid Token!",
+					"stacktrace": "Invalid Pattern!",
+				})
+			}
+
+			result, err := service.ValidateJWTToken(splitedToken[1])
 			if err != nil {
 				return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 					"error":      "AUTH.INVALIDTOKEN.EXCEPTION",
