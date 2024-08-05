@@ -70,7 +70,7 @@ func ApproveStudentRegistrationOutstandingData(userPayload interface{}, payload 
 	}
 	id, _ := primitive.ObjectIDFromHex(idPayload)
 	mongodbStudentRegistrationRepository.Filter = bson.D{{Key: "_id", Value: id}}
-	mongodbStudentRegistrationRepository.Payload = bson.M{"admision": userPayload}
+	mongodbStudentRegistrationRepository.Payload = bson.M{"admision": userPayload, "status": "Approved"}
 	err = mongodbStudentRegistrationRepository.UpdateMongoDB()
 	return
 }
