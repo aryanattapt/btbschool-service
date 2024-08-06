@@ -28,7 +28,10 @@ func GetDraftStudentRegistrationData(payload model.DraftStudentRegistrationData)
 
 func SubmitDataStudentRegistration(payload model.StudentRegistrationInsertPayload) (registrationcode string, err error) {
 	if pkg.IsEmptyString(payload.RegistrationCode) {
-		registrationcode = "PPD" + time.Now().Format("02012006150405")
+		registrationcode, err = pkg.GetFormattedCounter("PPDB", "STUDENTREGISTRATION")
+		if err != nil {
+			return
+		}
 		payload.RegisteredDate = primitive.NewDateTimeFromTime(time.Now())
 		payload.RegistrationCode = registrationcode
 		if pkg.IsEmptyString(payload.Status) {
@@ -39,7 +42,6 @@ func SubmitDataStudentRegistration(payload model.StudentRegistrationInsertPayloa
 
 		mongodbStudentRegistrationRepository.Payload = data
 		err = mongodbStudentRegistrationRepository.InsertMongoDB()
-		return
 	} else {
 		payload.Updateddate = primitive.NewDateTimeFromTime(time.Now())
 		registrationcode = payload.RegistrationCode
@@ -47,8 +49,8 @@ func SubmitDataStudentRegistration(payload model.StudentRegistrationInsertPayloa
 		data, _ := pkg.StructToMap(payload)
 		mongodbStudentRegistrationRepository.Payload = data
 		err = mongodbStudentRegistrationRepository.UpdateMongoDB()
-		return
 	}
+	return
 }
 
 func GetStudentRegistrationOutstandingData() (data []map[string]interface{}, err error) {
