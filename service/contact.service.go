@@ -2,7 +2,6 @@ package service
 
 import (
 	"btb-service/model"
-	"btb-service/pkg"
 	"btb-service/repository"
 
 	"github.com/go-playground/validator/v10"
@@ -61,21 +60,21 @@ func SubmitContact(ctx *fiber.Ctx) error {
 		})
 	}
 
-	var mailPayload pkg.MailPayload = pkg.MailPayload{
-		To:      []string{payload.Email},
-		Cc:      []string{payload.Email},
-		Subject: "Contact Submit Notification",
-		Message: payload.Message,
-	}
+	// var mailPayload pkg.MailPayload = pkg.MailPayload{
+	// 	To:      []string{payload.Email},
+	// 	Cc:      []string{payload.Email},
+	// 	Subject: "Contact Submit Notification",
+	// 	Message: payload.Message,
+	// }
 
-	err = mailPayload.SendMail()
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "CONTACT.SENDMAIL.EXCEPTION",
-			"message":    "Failed to send contact data!",
-			"stacktrace": err.Error(),
-		})
-	}
+	// err = mailPayload.SendMail()
+	// if err != nil {
+	// 	return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+	// 		"error":      "CONTACT.SENDMAIL.EXCEPTION",
+	// 		"message":    "Failed to send contact data!",
+	// 		"stacktrace": err.Error(),
+	// 	})
+	// }
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Success submit contact!",
