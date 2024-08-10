@@ -18,9 +18,9 @@ type StudentRegistrationInsertPayload struct {
 	Email                       string             `bson:"email,omitempty" json:"email,omitempty" validate:"required"`
 	Musicinstrument             string             `bson:"musicinstrument,omitempty" json:"musicinstrument,omitempty" validate:"required"`
 	Languagespoken              string             `bson:"languagespoken,omitempty" json:"languagespoken,omitempty" validate:"required"`
-	Previousschoolname          string             `bson:"previousschoolname,omitempty" json:"previousschoolname,omitempty" validate:"required"`
-	Yearlevelprevschool         string             `bson:"yearlevelprevschool,omitempty" json:"yearlevelprevschool,omitempty" validate:"required"`
-	Nextclass                   string             `bson:"nextclass,omitempty" json:"nextclass,omitempty" validate:"required"`
+	Previousschoolname          string             `bson:"previousschoolname,omitempty" json:"previousschoolname,omitempty"`
+	Yearlevelprevschool         string             `bson:"yearlevelprevschool,omitempty" json:"yearlevelprevschool,omitempty"`
+	Nextclass                   string             `bson:"nextclass,omitempty" json:"nextclass,omitempty"`
 	Fathername                  string             `bson:"fathername,omitempty" json:"fathername,omitempty" validate:"required"`
 	Fatherbirthplace            string             `bson:"fatherbirthplace,omitempty" json:"fatherbirthplace,omitempty" validate:"required"`
 	Fatherbirthdate             string             `bson:"fatherbirthdate,omitempty" json:"fatherbirthdate,omitempty" validate:"required"`

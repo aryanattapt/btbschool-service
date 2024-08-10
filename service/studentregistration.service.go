@@ -2,7 +2,9 @@ package service
 
 import (
 	"btb-service/model"
+	"btb-service/pkg"
 	"btb-service/repository"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -83,6 +85,65 @@ func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":      "STUDENTREG.SUBMIT.EXCEPTION",
 			"message":    "Failed to submit student data!",
+			"stacktrace": err.Error(),
+		})
+	}
+
+	var message string
+	if pkg.IsEmptyString(payload.RegistrationCode) {
+		message = fmt.Sprintf(`
+			<html>
+			<head>
+				<style>
+					body { font-family: Arial, sans-serif; }
+					.container { margin: 20px; }
+					.footer { margin-top: 20px; font-size: 0.9em; }
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<p>Dear Mr/Mrs,</p>
+					<p>Thank You For submit your data. Your registration code is <strong>%s</strong>.</p>
+					<p>Thank you,</p>
+					<p>Bina Tunas Bangsa School Admission</p>
+				</div>
+			</body>
+			</html>
+		`, registrationCode)
+	} else {
+		message = fmt.Sprintf(`
+			<html>
+			<head>
+				<style>
+					body { font-family: Arial, sans-serif; }
+					.container { margin: 20px; }
+					.footer { margin-top: 20px; font-size: 0.9em; }
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<p>Dear Mr/Mrs,</p>
+					<p>You're currently updated registration data for registration code <strong>%s</strong>.</p>
+					<p>Thank you,</p>
+					<p>Bina Tunas Bangsa School Admission</p>
+				</div>
+			</body>
+			</html>
+		`, payload.RegistrationCode)
+	}
+
+	var mailPayload pkg.MailPayload = pkg.MailPayload{
+		To:      []string{payload.Email},
+		Cc:      []string{},
+		Subject: "Online Registration Notification",
+		Message: message,
+	}
+
+	err = mailPayload.SendMail()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":      "CONTACT.SENDMAIL.EXCEPTION",
+			"message":    "Failed to send contact data!",
 			"stacktrace": err.Error(),
 		})
 	}
