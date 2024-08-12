@@ -81,6 +81,7 @@ func main() {
 	router.AttachmentsRouter(app)
 	router.StudentRegistrationRouter(app)
 	router.InstagramRouter(app)
+	router.UserRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
 

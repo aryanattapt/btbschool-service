@@ -3,6 +3,7 @@ package repository
 import (
 	"btb-service/model"
 	"btb-service/pkg"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -51,7 +52,8 @@ func UpdateUser(payload model.UserUpdatePayload) (err error) {
 	payload.IsActive = true
 	payload.UpdatedDate = primitive.NewDateTimeFromTime(time.Now())
 	data, _ := pkg.StructToMap(payload)
-	delete(data, "id")
+	delete(data, "_id")
+	log.Println(data)
 	mongoDBUserRepository.Payload = data
 
 	err = mongoDBUserRepository.UpdateMongoDB()

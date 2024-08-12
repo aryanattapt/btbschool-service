@@ -9,16 +9,16 @@ type UserViewPayload struct {
 	Email          string             `bson:"email,omitempty" json:"email,omitempty" validate:"required,email"`
 	RegisteredDate primitive.DateTime `bson:"registereddate,omitempty" json:"registereddate,omitempty"`
 	UpdatedDate    primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
+	Role           string             `bson:"role,omitempty" json:"role,omitempty" validate:"required"`
+	IsActive       bool               `bson:"isactive,omitempty" json:"isactive,omitempty"`
 }
 
 type UserInsertPayload struct {
 	Password string `bson:"password,omitempty" json:"password,omitempty" validate:"required,alphanum,min=3,max=20"`
-	Role     string `bson:"role,omitempty" json:"role,omitempty" validate:"required"`
-	IsActive bool   `bson:"isactive,omitempty" json:"isactive,omitempty"`
 	UserViewPayload
 }
 
 type UserUpdatePayload struct {
 	ID string `bson:"_id,omitempty" json:"_id,omitempty" validate:"required"`
-	UserInsertPayload
+	UserViewPayload
 }
