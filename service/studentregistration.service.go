@@ -141,11 +141,7 @@ func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 
 	err = mailPayload.SendMail()
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "CONTACT.SENDMAIL.EXCEPTION",
-			"message":    "Failed to send contact data!",
-			"stacktrace": err.Error(),
-		})
+		log.Println(err)
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{

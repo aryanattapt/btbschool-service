@@ -3,7 +3,6 @@ package repository
 import (
 	"btb-service/model"
 	"btb-service/pkg"
-	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -49,13 +48,16 @@ func UpdateUser(payload model.UserUpdatePayload) (err error) {
 	id, _ := primitive.ObjectIDFromHex(payload.ID)
 	mongoDBUserRepository.Filter = bson.M{"_id": id}
 
-	payload.IsActive = true
 	payload.UpdatedDate = primitive.NewDateTimeFromTime(time.Now())
-	data, _ := pkg.StructToMap(payload)
-	delete(data, "_id")
-	log.Println(data)
-	mongoDBUserRepository.Payload = data
-
+	mongoDBUserRepository.Payload = bson.M{
+		"firstname":   payload.FirstName,
+		"lastname":    payload.LastName,
+		"username":    payload.Username,
+		"email":       payload.Email,
+		"role":        payload.Role,
+		"updateddate": payload.UpdatedDate,
+		"isactive":    payload.IsActive,
+	}
 	err = mongoDBUserRepository.UpdateMongoDB()
 	return
 }
