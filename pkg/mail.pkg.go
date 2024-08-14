@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"os"
 	"strconv"
 	"strings"
@@ -18,8 +19,15 @@ type MailPayload struct {
 func (payload MailPayload) SendMail() (err error) {
 	m := gomail.NewMessage()
 	m.SetHeader("From", os.Getenv("MAIL_AUTH_EMAIL"))
-	m.SetHeader("To", strings.Join(payload.To, ","))
-	m.SetHeader("Cc", strings.Join(payload.Cc, ","))
+	if len(payload.To) == 0 {
+		err = errors.New("destination is empty")
+		return
+	} else {
+		m.SetHeader("To", strings.Join(payload.To, ","))
+	}
+	if len(payload.Cc) != 0 {
+		m.SetHeader("Cc", strings.Join(payload.Cc, ","))
+	}
 	m.SetHeader("Subject", payload.Subject)
 	m.SetBody("text/plain", payload.Message)
 
