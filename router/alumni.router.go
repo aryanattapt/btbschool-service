@@ -9,6 +9,7 @@ import (
 
 func AlumniRouter(app *fiber.App) {
 	alumniRouter := app.Group("/alumni")
-	alumniRouter.All("/", middleware.BasicAuthMiddleware(), controller.GetAlumni)
+	alumniRouter.All("/fetch", middleware.JWTAuthMiddleware(), controller.GetAlumni)
 	alumniRouter.All("/submit", middleware.BasicAuthMiddleware(), controller.SubmitAlumni)
+	alumniRouter.All("/verify", middleware.JWTAuthMiddleware(), controller.VerifyAlumni)
 }

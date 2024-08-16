@@ -7,7 +7,7 @@ import (
 )
 
 func GetAlumni(ctx *fiber.Ctx) error {
-	if ctx.Method() == "GET" {
+	if ctx.Method() == "POST" {
 		return service.GetAlumni(ctx)
 	} else if ctx.Method() == "OPTIONS" {
 		return NoContentRoute(ctx)
@@ -19,6 +19,16 @@ func GetAlumni(ctx *fiber.Ctx) error {
 func SubmitAlumni(ctx *fiber.Ctx) error {
 	if ctx.Method() == "POST" {
 		return service.SubmitAlumni(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}
+
+func VerifyAlumni(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.VerifyAlumni(ctx)
 	} else if ctx.Method() == "OPTIONS" {
 		return NoContentRoute(ctx)
 	} else {

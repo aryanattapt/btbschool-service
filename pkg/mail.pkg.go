@@ -29,7 +29,7 @@ func (payload MailPayload) SendMail() (err error) {
 		m.SetHeader("Cc", strings.Join(payload.Cc, ","))
 	}
 	m.SetHeader("Subject", payload.Subject)
-	m.SetBody("text/plain", payload.Message)
+	m.SetBody("text/html", payload.Message)
 
 	smtpPort, err := strconv.Atoi(os.Getenv("MAIL_SMTP_PORT"))
 	if err != nil {

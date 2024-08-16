@@ -67,6 +67,8 @@ func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 					errorMessage += fieldName + " is required.<br/>"
 				case "email":
 					errorMessage += fieldName + " must be a valid email address.<br/>"
+				case "e164":
+					errorMessage += fieldName + " must be a valid Phone no<br/>"
 				default:
 					errorMessage += fieldName + " is invalid.<br/>"
 				}

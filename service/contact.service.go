@@ -4,6 +4,7 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"btb-service/repository"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -70,11 +71,7 @@ func SubmitContact(ctx *fiber.Ctx) error {
 
 	err = mailPayload.SendMail()
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "CONTACT.SENDMAIL.EXCEPTION",
-			"message":    "Failed to send contact data!",
-			"stacktrace": err.Error(),
-		})
+		log.Println(err.Error())
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
