@@ -68,12 +68,12 @@ type StudentRegistrationInsertPayload struct {
 	Fathercompanyname           string             `bson:"fathercompanyname,omitempty" json:"fathercompanyname,omitempty" validate:"required"`
 	FatherbusinessAddress       string             `bson:"fatherbusinessAddress,omitempty" json:"fatherbusinessAddress,omitempty" validate:"required"`
 	Fathertelephone             string             `bson:"fathertelephone,omitempty" json:"fathertelephone,omitempty" validate:"required"`
-	Fatherfax                   string             `bson:"fatherfax,omitempty" json:"fatherfax,omitempty" validate:"required"`
+	Fatherfax                   string             `bson:"fatherfax,omitempty" json:"fatherfax,omitempty"`
 	Motheroccupation            string             `bson:"motheroccupation,omitempty" json:"motheroccupation,omitempty" validate:"required"`
 	Mothercompanyname           string             `bson:"mothercompanyname,omitempty" json:"mothercompanyname,omitempty" validate:"required"`
 	MotherbusinessAddress       string             `bson:"motherbusinessAddress,omitempty" json:"motherbusinessAddress,omitempty" validate:"required"`
 	Mothertelephone             string             `bson:"mothertelephone,omitempty" json:"mothertelephone,omitempty" validate:"required"`
-	Motherfax                   string             `bson:"motherfax,omitempty" json:"motherfax,omitempty" validate:"required"`
+	Motherfax                   string             `bson:"motherfax,omitempty" json:"motherfax,omitempty"`
 }
 
 type DraftStudentRegistrationData struct {
