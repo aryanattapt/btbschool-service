@@ -4,6 +4,7 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"btb-service/repository"
+	"fmt"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -46,10 +47,26 @@ func SubmitContact(ctx *fiber.Ctx) error {
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
+
+		var errorMessage string
+		for _, err := range err.(validator.ValidationErrors) {
+			fieldName := err.StructField()
+			switch err.Tag() {
+			case "required":
+				errorMessage += fieldName + " is required.<br/>"
+			case "email":
+				errorMessage += fieldName + " must be a valid email address.<br/>"
+			case "e164":
+				errorMessage += fieldName + " must be a valid Phone no<br/>"
+			default:
+				errorMessage += fieldName + " is invalid.<br/>"
+			}
+		}
+
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":      "CONTACT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Parameter is required!",
-			"stacktrace": err.Error(),
+			"message":    errorMessage,
+			"stacktrace": errorMessage,
 		})
 	}
 
@@ -62,11 +79,31 @@ func SubmitContact(ctx *fiber.Ctx) error {
 		})
 	}
 
+	message := fmt.Sprintf(`
+		<html>
+		<head>
+			<style>
+				body { font-family: Arial, sans-serif; }
+				.container { margin: 20px; }
+				.footer { margin-top: 20px; font-size: 0.9em; }
+			</style>
+		</head>
+		<body>
+			<div class="container">
+				<p>Dear Mr/Mrs Bina Tunas Bangsa School,</p>
+				<p>You just received a Message From %s %s. The Message are below.</p>
+				<strong>%s</strong>
+				<p>Thank you</p>
+			</div>
+		</body>
+		</html>
+	`, payload.FirstName, payload.LastName, payload.Message)
+
 	var mailPayload pkg.MailPayload = pkg.MailPayload{
-		To:      []string{payload.Email},
-		Cc:      []string{},
+		To:      []string{"aryanatta@gmail.com"},
+		Cc:      []string{payload.Email},
 		Subject: "Contact Submit Notification",
-		Message: payload.Message,
+		Message: message,
 	}
 
 	err = mailPayload.SendMail()
