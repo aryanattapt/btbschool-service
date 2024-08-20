@@ -4,6 +4,7 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -28,11 +29,14 @@ func ApplyCareer(payload model.CareerApplyInsertPayload) (err error) {
 
 func UpsertCareer(payload model.CareerUpsertPayload) (err error) {
 	mongodbCareerRepository.CollectionName = "career"
-	data, _ := pkg.StructToMap(payload)
-	mongodbCareerRepository.Payload = data
 	if pkg.IsEmptyString(payload.ID) {
+		payload.RegisteredDate = primitive.NewDateTimeFromTime(time.Now())
+		data, _ := pkg.StructToMap(payload)
+		mongodbCareerRepository.Payload = data
 		err = mongodbCareerRepository.InsertMongoDB()
 	} else {
+		data, _ := pkg.StructToMap(payload)
+		mongodbCareerRepository.Payload = data
 		delete(mongodbCareerRepository.Payload, "_id")
 		id, _ := primitive.ObjectIDFromHex(payload.ID)
 		mongodbCareerRepository.Filter = bson.D{{Key: "_id", Value: id}}
