@@ -100,7 +100,7 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
 			"message": "Sorry, System can't parse your data! Please Recheck!",
-			"code":    err.Error(),
+			"error":   err.Error(),
 		})
 	}
 
@@ -125,7 +125,7 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
 			"message": errorMessage,
-			"code":    errorMessage,
+			"error":   errorMessage,
 		})
 	}
 
@@ -135,14 +135,14 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    "ALUMNI.SUBMIT.EXCEPTION",
 			"message": "Failed to verify Alumni data!",
-			"code":    err.Error(),
+			"error":   err.Error(),
 		})
 	}
 	if len(alumniData) == 0 {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    "ALUMNI.SUBMIT.EXCEPTION",
 			"message": "Alumni data not found",
-			"code":    "alumni not found",
+			"error":   "alumni not found",
 		})
 	}
 
@@ -150,7 +150,7 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    "ALUMNI.SUBMIT.EXCEPTION",
 			"message": "Failed to verify Alumni data!",
-			"code":    err.Error(),
+			"error":   err.Error(),
 		})
 	}
 
