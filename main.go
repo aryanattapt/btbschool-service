@@ -41,9 +41,9 @@ func main() {
 				code = e.Code
 			}
 			return ctx.Status(code).JSON(fiber.Map{
-				"error":      "SERVICE.PANIC.EXCEPTION",
-				"message":    "Something wrong happened!",
-				"stacktrace": err.Error(),
+				"code":    "SERVICE.PANIC.EXCEPTION",
+				"message": "Something wrong happened!",
+				"error":   err.Error(),
 			})
 		},
 	})

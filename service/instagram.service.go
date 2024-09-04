@@ -40,18 +40,18 @@ func GetInstagramFeed(ctx *fiber.Ctx) error {
 	token, err := repository.GetInstagramToken()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "IG.QUERY.EXCEPTION",
-			"message":    "Sorry, Failed get instagram data!",
-			"stacktrace": err.Error(),
+			"code":    "IG.QUERY.EXCEPTION",
+			"message": "Sorry, Failed get instagram data!",
+			"error":   err.Error(),
 		})
 	}
 
 	result, err := pkg.CallURLGet(fmt.Sprintf("%s%s", "https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&access_token=", token))
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "IG.QUERY.EXCEPTION",
-			"message":    "Sorry, Failed get instagram data!",
-			"stacktrace": err.Error(),
+			"code":    "IG.QUERY.EXCEPTION",
+			"message": "Sorry, Failed get instagram data!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -59,9 +59,9 @@ func GetInstagramFeed(ctx *fiber.Ctx) error {
 	err = json.Unmarshal([]byte(result), &resultInJSON)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "IG.QUERY.EXCEPTION",
-			"message":    "Sorry, Failed get instagram data!",
-			"stacktrace": err.Error(),
+			"code":    "IG.QUERY.EXCEPTION",
+			"message": "Sorry, Failed get instagram data!",
+			"error":   err.Error(),
 		})
 	}
 

@@ -15,35 +15,35 @@ func SignUp(ctx *fiber.Ctx) error {
 	var payload = &model.UserInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Parameter is required!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNUP.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
 		})
 	}
 
 	data, err := repository.GetUserByUsernameOrEmail(payload.Username, payload.Username)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNUP.USERQUERY.EXCEPTION",
-			"message":    "Failed to validate user data!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNUP.USERQUERY.EXCEPTION",
+			"message": "Failed to validate user data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) != 0 {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error":      "SIGNUP.USEREXIST.EXCEPTION",
-			"message":    "Sorry, User is already exist in database!",
-			"stacktrace": "User is already exist",
+			"code":    "SIGNUP.USEREXIST.EXCEPTION",
+			"message": "Sorry, User is already exist in database!",
+			"error":   "User is already exist",
 		})
 	}
 
@@ -51,9 +51,9 @@ func SignUp(ctx *fiber.Ctx) error {
 	payload.IsActive = true
 	if err := repository.SaveUser(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "SIGNUP.REGISTERUSER.EXCEPTION",
-			"message":    "Failed to signup!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNUP.REGISTERUSER.EXCEPTION",
+			"message": "Failed to signup!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -66,43 +66,43 @@ func SignIn(ctx *fiber.Ctx) error {
 	var payload = &model.SignInPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Parameter is required!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNIN.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
 		})
 	}
 
 	data, err := repository.GetUserByUsernameOrEmail(payload.Username, payload.Username)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNIN.USERQUERY.EXCEPTION",
-			"message":    "Failed to validate user data!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNIN.USERQUERY.EXCEPTION",
+			"message": "Failed to validate user data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":      "SIGNIN.USERNOTEXIST.EXCEPTION",
-			"message":    "Sorry, User is not exist in database!",
-			"stacktrace": "User is not exist",
+			"code":    "SIGNIN.USERNOTEXIST.EXCEPTION",
+			"message": "Sorry, User is not exist in database!",
+			"error":   "User is not exist",
 		})
 	}
 
 	if !pkg.ComparePasswordBCrypt(payload.Password, data[0]["password"].(string)) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "SIGNIN.INVALIDPASSWORD.EXCEPTION",
-			"message":    "Password not match!",
-			"stacktrace": "Incorrect Password!",
+			"code":    "SIGNIN.INVALIDPASSWORD.EXCEPTION",
+			"message": "Password not match!",
+			"error":   "Incorrect Password!",
 		})
 	}
 
@@ -119,9 +119,9 @@ func SignIn(ctx *fiber.Ctx) error {
 	jwtToken, err, expiredDate := jwtPayload.CreateJWTToken()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "SIGNIN.TOKEN.EXCEPTION",
-			"message":    "Failed generate token!",
-			"stacktrace": err.Error(),
+			"code":    "SIGNIN.TOKEN.EXCEPTION",
+			"message": "Failed generate token!",
+			"error":   err.Error(),
 		})
 	}
 

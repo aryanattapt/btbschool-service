@@ -17,26 +17,26 @@ func GetAlumni(ctx *fiber.Ctx) error {
 	var payload = &map[string]interface{}{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	data, err := repository.GetAlumni(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.ALUMNIQUERY.EXCEPTION",
-			"message":    "Failed to get alumni data!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.ALUMNIQUERY.EXCEPTION",
+			"message": "Failed to get alumni data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":      "ALUMNI.NOTEXIST.EXCEPTION",
-			"message":    "Sorry, Alumni Data isn't exist!",
-			"stacktrace": "Alumni data is not exist",
+			"code":    "ALUMNI.NOTEXIST.EXCEPTION",
+			"message": "Sorry, Alumni Data isn't exist!",
+			"error":   "Alumni data is not exist",
 		})
 	}
 
@@ -50,9 +50,9 @@ func SubmitAlumni(ctx *fiber.Ctx) error {
 	var payload = &model.AlumniInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -75,17 +75,17 @@ func SubmitAlumni(ctx *fiber.Ctx) error {
 		}
 
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
-			"message":    errorMessage,
-			"stacktrace": errorMessage,
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": errorMessage,
+			"error":   errorMessage,
 		})
 	}
 
 	if err := repository.SaveAlumni(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.SUBMIT.EXCEPTION",
-			"message":    "Failed to submit Alumni data!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.SUBMIT.EXCEPTION",
+			"message": "Failed to submit Alumni data!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -98,9 +98,9 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 	var payload = &model.AlumniVerifyPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"code":    err.Error(),
 		})
 	}
 
@@ -123,9 +123,9 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		}
 
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
-			"message":    errorMessage,
-			"stacktrace": errorMessage,
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": errorMessage,
+			"code":    errorMessage,
 		})
 	}
 
@@ -133,24 +133,24 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 	alumniData, err := repository.GetAlumni(bson.M{"_id": id})
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.SUBMIT.EXCEPTION",
-			"message":    "Failed to verify Alumni data!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.SUBMIT.EXCEPTION",
+			"message": "Failed to verify Alumni data!",
+			"code":    err.Error(),
 		})
 	}
 	if len(alumniData) == 0 {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.SUBMIT.EXCEPTION",
-			"message":    "Alumni data not found",
-			"stacktrace": "alumni not found",
+			"code":    "ALUMNI.SUBMIT.EXCEPTION",
+			"message": "Alumni data not found",
+			"code":    "alumni not found",
 		})
 	}
 
 	if err = repository.VerifyAlumni(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ALUMNI.SUBMIT.EXCEPTION",
-			"message":    "Failed to verify Alumni data!",
-			"stacktrace": err.Error(),
+			"code":    "ALUMNI.SUBMIT.EXCEPTION",
+			"message": "Failed to verify Alumni data!",
+			"code":    err.Error(),
 		})
 	}
 

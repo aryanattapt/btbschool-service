@@ -29,9 +29,9 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	// Parse the request body into the map
 	if err := ctx.BodyParser(&payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "GOOGLE.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, system can't parse your data! Please recheck!",
-			"stacktrace": err.Error(),
+			"code":    "GOOGLE.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, system can't parse your data! Please recheck!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -40,7 +40,7 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	if !ok {
 		log.Println("data field is either missing or not a string")
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
+			"code":    "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
 			"message": "The 'data' field is missing or not a valid string.",
 		})
 	}
@@ -50,9 +50,9 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	req, err := http.NewRequest("POST", "https://www.google.com/recaptcha/api/siteverify", bytes.NewBufferString(finalPayload))
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "GOOGLE.REQUEST_ERROR",
-			"message":    "Failed to create request to Google reCAPTCHA.",
-			"stacktrace": err.Error(),
+			"code":    "GOOGLE.REQUEST_ERROR",
+			"message": "Failed to create request to Google reCAPTCHA.",
+			"error":   err.Error(),
 		})
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -61,9 +61,9 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	resp, err := client.Do(req)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "GOOGLE.REQUEST_ERROR",
-			"message":    "Failed to send request to Google reCAPTCHA.",
-			"stacktrace": err.Error(),
+			"code":    "GOOGLE.REQUEST_ERROR",
+			"message": "Failed to send request to Google reCAPTCHA.",
+			"error":   err.Error(),
 		})
 	}
 	defer resp.Body.Close()
@@ -72,9 +72,9 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "GOOGLE.RESPONSE_ERROR",
-			"message":    "Failed to read response from Google reCAPTCHA.",
-			"stacktrace": err.Error(),
+			"code":    "GOOGLE.RESPONSE_ERROR",
+			"message": "Failed to read response from Google reCAPTCHA.",
+			"error":   err.Error(),
 		})
 	}
 
@@ -82,16 +82,16 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	var recaptchaResponse RecaptchaResponse
 	if err := json.Unmarshal(body, &recaptchaResponse); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "GOOGLE.PARSE_ERROR",
-			"message":    "Failed to parse response from Google reCAPTCHA.",
-			"stacktrace": err.Error(),
+			"code":    "GOOGLE.PARSE_ERROR",
+			"message": "Failed to parse response from Google reCAPTCHA.",
+			"error":   err.Error(),
 		})
 	}
 
 	// Check the success status and return an appropriate response
 	if !recaptchaResponse.Success {
 		return ctx.Status(fiber.StatusForbidden).JSON(fiber.Map{
-			"error":   "GOOGLE.INVALID_RECAPTCHA",
+			"code":    "GOOGLE.INVALID_RECAPTCHA",
 			"message": "Invalid reCAPTCHA verification.",
 		})
 	}

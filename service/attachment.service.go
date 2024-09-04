@@ -16,18 +16,18 @@ func UploadAttachment(ctx *fiber.Ctx) error {
 	var param string = ctx.Params("param")
 	if pkg.IsEmptyString(param) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Please define Param!",
-			"stacktrace": "Param is not exist",
+			"code":    "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Please define Param!",
+			"error":   "Param is not exist",
 		})
 	}
 
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-			"message":    "Failed to submit attachment data!",
-			"stacktrace": err.Error(),
+			"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message": "Failed to submit attachment data!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -68,27 +68,27 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 	var param string = ctx.Params("param")
 	if pkg.IsEmptyString(param) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Please define Param!",
-			"stacktrace": "Param is not exist",
+			"code":    "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Please define Param!",
+			"error":   "Param is not exist",
 		})
 	}
 
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-			"message":    "Failed to submit attachment data!",
-			"stacktrace": err.Error(),
+			"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message": "Failed to submit attachment data!",
+			"error":   err.Error(),
 		})
 	}
 
 	session, err := CreateSessionS3()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-			"message":    "Failed to open session!",
-			"stacktrace": err.Error(),
+			"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message": "Failed to open session!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -102,9 +102,9 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 			theFile, err := file.Open()
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-					"message":    "Failed to open attachment data!",
-					"stacktrace": err.Error(),
+					"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message": "Failed to open attachment data!",
+					"error":   err.Error(),
 				})
 			}
 			defer theFile.Close()
@@ -113,9 +113,9 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 			_, err = UploadFileS3(uploader, theFile, "uploads", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-					"message":    "Failed to upload file!",
-					"stacktrace": err.Error(),
+					"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message": "Failed to upload file!",
+					"error":   err.Error(),
 				})
 			}
 
@@ -141,27 +141,27 @@ func UploadAssetsS3(ctx *fiber.Ctx) error {
 	var param string = ctx.Params("param")
 	if pkg.IsEmptyString(param) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Please define Param!",
-			"stacktrace": "Param is not exist",
+			"code":    "ATTACHMENT.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Please define Param!",
+			"error":   "Param is not exist",
 		})
 	}
 
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-			"message":    "Failed to submit attachment data!",
-			"stacktrace": err.Error(),
+			"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message": "Failed to submit attachment data!",
+			"error":   err.Error(),
 		})
 	}
 
 	session, err := CreateSessionS3()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-			"message":    "Failed to open session!",
-			"stacktrace": err.Error(),
+			"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+			"message": "Failed to open session!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -175,9 +175,9 @@ func UploadAssetsS3(ctx *fiber.Ctx) error {
 			theFile, err := file.Open()
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-					"message":    "Failed to open attachment data!",
-					"stacktrace": err.Error(),
+					"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message": "Failed to open attachment data!",
+					"error":   err.Error(),
 				})
 			}
 			defer theFile.Close()
@@ -186,9 +186,9 @@ func UploadAssetsS3(ctx *fiber.Ctx) error {
 			_, err = UploadFileS3(uploader, theFile, "assets", fmt.Sprintf("%s/%s/%s", param, formFieldName, fileName))
 			if err != nil {
 				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":      "ATTACHMENT.UPLOAD.EXCEPTION",
-					"message":    "Failed to upload file!",
-					"stacktrace": err.Error(),
+					"code":    "ATTACHMENT.UPLOAD.EXCEPTION",
+					"message": "Failed to upload file!",
+					"error":   err.Error(),
 				})
 			}
 

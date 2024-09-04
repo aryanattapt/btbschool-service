@@ -73,3 +73,11 @@ func GetFormattedCounter(prefix string, module string) (result string, err error
 	result = fmt.Sprintf("%s%s%03d", prefix, today, resultObj.Counter)
 	return
 }
+
+func LowercaseFirstChar(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	firstChar := strings.ToLower(string(s[0]))
+	return firstChar + s[1:]
+}

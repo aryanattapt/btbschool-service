@@ -13,35 +13,35 @@ func InsertUser(ctx *fiber.Ctx) error {
 	var payload = &model.UserInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Parameter is required!",
-			"stacktrace": err.Error(),
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
 		})
 	}
 
 	data, err := repository.GetUserByUsernameOrEmail(payload.Username, payload.Username)
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.USERQUERY.EXCEPTION",
-			"message":    "Failed to validate user data!",
-			"stacktrace": err.Error(),
+			"code":    "USER.USERQUERY.EXCEPTION",
+			"message": "Failed to validate user data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) != 0 {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error":      "USER.USEREXIST.EXCEPTION",
-			"message":    "Sorry, User is already exist in database!",
-			"stacktrace": "User is already exist",
+			"code":    "USER.USEREXIST.EXCEPTION",
+			"message": "Sorry, User is already exist in database!",
+			"error":   "User is already exist",
 		})
 	}
 
@@ -49,9 +49,9 @@ func InsertUser(ctx *fiber.Ctx) error {
 	payload.IsActive = true
 	if err := repository.SaveUser(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "USER.REGISTERUSER.EXCEPTION",
-			"message":    "Failed to USER!",
-			"stacktrace": err.Error(),
+			"code":    "USER.REGISTERUSER.EXCEPTION",
+			"message": "Failed to USER!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -64,26 +64,26 @@ func GetAllUser(ctx *fiber.Ctx) error {
 	var payload = &map[string]interface{}{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	data, err := repository.GetAllUser(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "USER.QUERY.EXCEPTION",
-			"message":    "Failed to get User data!",
-			"stacktrace": err.Error(),
+			"code":    "USER.QUERY.EXCEPTION",
+			"message": "Failed to get User data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":      "USER.NOTEXIST.EXCEPTION",
-			"message":    "Sorry, USER Data isn't exist!",
-			"stacktrace": "User data is not exist",
+			"code":    "USER.NOTEXIST.EXCEPTION",
+			"message": "Sorry, USER Data isn't exist!",
+			"error":   "User data is not exist",
 		})
 	}
 
@@ -97,27 +97,27 @@ func UpdateUser(ctx *fiber.Ctx) error {
 	var payload = &model.UserUpdatePayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "USER.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Parameter is required!",
-			"stacktrace": err.Error(),
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
 		})
 	}
 
 	err := repository.UpdateUser(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "USER.SUBMIT.EXCEPTION",
-			"message":    "Failed to update user!",
-			"stacktrace": err.Error(),
+			"code":    "USER.SUBMIT.EXCEPTION",
+			"message": "Failed to update user!",
+			"error":   err.Error(),
 		})
 	}
 

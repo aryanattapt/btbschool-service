@@ -15,17 +15,17 @@ func GetContacts(ctx *fiber.Ctx) error {
 	data, err := repository.GetContacts()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "CONTACT.CONTACTQUERY.EXCEPTION",
-			"message":    "Failed to get contact data!",
-			"stacktrace": err.Error(),
+			"code":    "CONTACT.CONTACTQUERY.EXCEPTION",
+			"message": "Failed to get contact data!",
+			"error":   err.Error(),
 		})
 	}
 
 	if len(data) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":      "CONTACT.NOTEXIST.EXCEPTION",
-			"message":    "Sorry, Contact Data isn't exist!",
-			"stacktrace": "Contact data is not exist",
+			"code":    "CONTACT.NOTEXIST.EXCEPTION",
+			"message": "Sorry, Contact Data isn't exist!",
+			"error":   "Contact data is not exist",
 		})
 	}
 
@@ -39,9 +39,9 @@ func SubmitContact(ctx *fiber.Ctx) error {
 	var payload = &model.ContactInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "CONTACT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    "Sorry, System can't parse your data! Please Recheck!",
-			"stacktrace": err.Error(),
+			"code":    "CONTACT.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
 		})
 	}
 
@@ -64,18 +64,18 @@ func SubmitContact(ctx *fiber.Ctx) error {
 		}
 
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":      "CONTACT.INVALIDPAYLOAD.EXCEPTION",
-			"message":    errorMessage,
-			"stacktrace": errorMessage,
+			"code":    "CONTACT.INVALIDPAYLOAD.EXCEPTION",
+			"message": errorMessage,
+			"error":   errorMessage,
 		})
 	}
 
 	err := repository.SaveContacts(*payload)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":      "CONTACT.SUBMIT.EXCEPTION",
-			"message":    "Failed to submit contact data!",
-			"stacktrace": err.Error(),
+			"code":    "CONTACT.SUBMIT.EXCEPTION",
+			"message": "Failed to submit contact data!",
+			"error":   err.Error(),
 		})
 	}
 
