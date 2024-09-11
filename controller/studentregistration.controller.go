@@ -26,6 +26,16 @@ func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 	}
 }
 
+func ValidateDataStudentRegistration(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.ValidateDataStudentRegistration(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}
+
 func GetStudentRegistrationOutstandingData(ctx *fiber.Ctx) error {
 	if ctx.Method() == "GET" {
 		return service.GetStudentRegistrationOutstandingData(ctx)

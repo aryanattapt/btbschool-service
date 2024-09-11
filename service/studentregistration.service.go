@@ -66,6 +66,49 @@ func parseAndValidatePage(ctx *fiber.Ctx, payload interface{}, pageNumber int) m
 	return errorResultValidator
 }
 
+func ValidateDataStudentRegistration(ctx *fiber.Ctx) error {
+	combinedErrors := make(map[string]interface{})
+
+	/* Page 1 */
+	payloadPage1 := &model.StudentRegistrationInsertPayloadPage1{}
+	page1Errors := parseAndValidatePage(ctx, payloadPage1, 1)
+	if len(page1Errors) > 0 {
+		for key, value := range page1Errors {
+			combinedErrors[key] = value
+		}
+	}
+
+	/* Page 3 */
+	payloadPage3 := &model.StudentRegistrationInsertPayloadPage3{}
+	page3Errors := parseAndValidatePage(ctx, payloadPage3, 3)
+	if len(page3Errors) > 0 {
+		for key, value := range page3Errors {
+			combinedErrors[key] = value
+		}
+	}
+
+	/* Page 4 */
+	payloadPage4 := &model.StudentRegistrationInsertPayloadPage4{}
+	page4Errors := parseAndValidatePage(ctx, payloadPage4, 4)
+	if len(page4Errors) > 0 {
+		for key, value := range page4Errors {
+			combinedErrors[key] = value
+		}
+	}
+
+	if len(combinedErrors) > 0 {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "STUDENTREG.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Validation errors occurred!",
+			"error":   combinedErrors,
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "All data is valid!",
+	})
+}
+
 func SubmitDataStudentRegistration(ctx *fiber.Ctx) error {
 	var payload = &model.StudentRegistrationInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
