@@ -21,55 +21,54 @@ type schoolInformationForm struct {
 }
 
 type studentDetailForm struct {
-	Firstname      string `bson:"firstname,omitempty" json:"firstname,omitempty" validate:"required,min=3,max=30"`
-	Middlename     string `bson:"middlename,omitempty" json:"middlename"`
-	Lastname       string `bson:"lastname,omitempty" json:"lastname"`
-	Birthplace     string `bson:"birthplace,omitempty" json:"birthplace" validate:"required"`
-	Birthdate      string `bson:"birthdate,omitempty" json:"birthdate" validate:"required"`
-	Nationality    string `bson:"nationality,omitempty" json:"nationality,omitempty" validate:"required"`
-	Religion       string `bson:"religion,omitempty" json:"religion,omitempty" validate:"required"`
-	Gender         string `bson:"gender,omitempty" json:"gender,omitempty" validate:"required"`
-	Address        string `bson:"address,omitempty" json:"address,omitempty" validate:"required"`
-	Phoneno        string `bson:"phoneno,omitempty" json:"phoneno,omitempty" validate:"required"`
-	Email          string `bson:"email,omitempty" json:"email,omitempty" validate:"required"`
-	Languagespoken string `bson:"languagespoken,omitempty" json:"languagespoken,omitempty" validate:"required"`
+	Firstname      string        `bson:"firstname,omitempty" json:"firstname,omitempty" validate:"required,min=3,max=30"`
+	Middlename     string        `bson:"middlename,omitempty" json:"middlename"`
+	Lastname       string        `bson:"lastname,omitempty" json:"lastname"`
+	Birthplace     string        `bson:"birthplace,omitempty" json:"birthplace" validate:"required"`
+	Birthdate      string        `bson:"birthdate,omitempty" json:"birthdate" validate:"required"`
+	Nationality    string        `bson:"nationality,omitempty" json:"nationality,omitempty" validate:"required"`
+	Religion       string        `bson:"religion,omitempty" json:"religion,omitempty" validate:"required"`
+	Gender         string        `bson:"gender,omitempty" json:"gender,omitempty" validate:"required"`
+	Address        string        `bson:"address,omitempty" json:"address,omitempty" validate:"required"`
+	Phoneno        string        `bson:"phoneno,omitempty" json:"phoneno,omitempty" validate:"required,e164"`
+	Email          string        `bson:"email,omitempty" json:"email,omitempty" validate:"required,email"`
+	Languagespoken []interface{} `bson:"languagespoken,omitempty" json:"languagespoken,omitempty" validate:"required"`
 }
-
 type educationalBackgroundForm struct {
-	Previousschoolname  string `bson:"previousschoolname,omitempty" json:"previousschoolname,omitempty"`
-	Yearlevelprevschool string `bson:"yearlevelprevschool,omitempty" json:"yearlevelprevschool,omitempty"`
-	Nextclass           string `bson:"nextclass,omitempty" json:"nextclass,omitempty"`
+	Previousschoolname  string `bson:"previousschoolname,omitempty" json:"previousschoolname,omitempty" validate:"required"`
+	Yearlevelprevschool string `bson:"yearlevelprevschool,omitempty" json:"yearlevelprevschool,omitempty" validate:"required"`
+	Nextclass           string `bson:"nextclass,omitempty" json:"nextclass,omitempty" validate:"required"`
 }
 
 type parentsInformationForm struct {
 	Fathername            string `bson:"fathername,omitempty" json:"fathername,omitempty" validate:"required"`
 	Fatherbirthplace      string `bson:"fatherbirthplace,omitempty" json:"fatherbirthplace,omitempty" validate:"required"`
 	Fatherbirthdate       string `bson:"fatherbirthdate,omitempty" json:"fatherbirthdate,omitempty" validate:"required"`
-	Fatherphoneno         string `bson:"fatherphoneno,omitempty" json:"fatherphoneno,omitempty" validate:"required"`
-	Fatheremail           string `bson:"fatheremail,omitempty" json:"fatheremail,omitempty" validate:"required"`
+	Fatherphoneno         string `bson:"fatherphoneno,omitempty" json:"fatherphoneno,omitempty" validate:"required,e164"`
+	Fatheremail           string `bson:"fatheremail,omitempty" json:"fatheremail,omitempty" validate:"required,email"`
 	Fathermaritalstatus   string `bson:"fathermaritalstatus,omitempty" json:"fathermaritalstatus,omitempty" validate:"required"`
 	Fatheroccupation      string `bson:"fatheroccupation,omitempty" json:"fatheroccupation,omitempty" validate:"required"`
-	Fathercompanyname     string `bson:"fathercompanyname,omitempty" json:"fathercompanyname,omitempty" validate:"required"`
-	FatherbusinessAddress string `bson:"fatherbusinessAddress,omitempty" json:"fatherbusinessAddress,omitempty" validate:"required"`
-	Fathertelephone       string `bson:"fathertelephone,omitempty" json:"fathertelephone,omitempty" validate:"required"`
+	Fathercompanyname     string `bson:"fathercompanyname,omitempty" json:"fathercompanyname,omitempty"`
+	FatherbusinessAddress string `bson:"fatherbusinessAddress,omitempty" json:"fatherbusinessAddress,omitempty"`
+	Fathertelephone       string `bson:"fathertelephone,omitempty" json:"fathertelephone,omitempty"`
 	Fatherfax             string `bson:"fatherfax,omitempty" json:"fatherfax,omitempty"`
 	Mothername            string `bson:"mothername,omitempty" json:"mothername,omitempty" validate:"required"`
 	Motherbirthplace      string `bson:"motherbirthplace,omitempty" json:"motherbirthplace,omitempty" validate:"required"`
 	Motherbirthdate       string `bson:"motherbirthdate,omitempty" json:"motherbirthdate,omitempty" validate:"required"`
-	Motherphoneno         string `bson:"motherphoneno,omitempty" json:"motherphoneno,omitempty" validate:"required"`
-	Motheremail           string `bson:"motheremail,omitempty" json:"motheremail,omitempty" validate:"required"`
+	Motherphoneno         string `bson:"motherphoneno,omitempty" json:"motherphoneno,omitempty" validate:"required,e164"`
+	Motheremail           string `bson:"motheremail,omitempty" json:"motheremail,omitempty" validate:"required,email"`
 	Mothermaritalstatus   string `bson:"mothermaritalstatus,omitempty" json:"mothermaritalstatus,omitempty" validate:"required"`
 	Motheroccupation      string `bson:"motheroccupation,omitempty" json:"motheroccupation,omitempty" validate:"required"`
-	Mothercompanyname     string `bson:"mothercompanyname,omitempty" json:"mothercompanyname,omitempty" validate:"required"`
-	MotherbusinessAddress string `bson:"motherbusinessAddress,omitempty" json:"motherbusinessAddress,omitempty" validate:"required"`
-	Mothertelephone       string `bson:"mothertelephone,omitempty" json:"mothertelephone,omitempty" validate:"required"`
+	Mothercompanyname     string `bson:"mothercompanyname,omitempty" json:"mothercompanyname,omitempty"`
+	MotherbusinessAddress string `bson:"motherbusinessAddress,omitempty" json:"motherbusinessAddress,omitempty"`
+	Mothertelephone       string `bson:"mothertelephone,omitempty" json:"mothertelephone,omitempty"`
 	Motherfax             string `bson:"motherfax,omitempty" json:"motherfax,omitempty"`
 }
 
 type emergencyContactForm struct {
 	Emergencycontactname      string `bson:"emergencycontactname,omitempty" json:"emergencycontactname,omitempty" validate:"required"`
 	Emergencycontactrelaction string `bson:"emergencycontactrelaction,omitempty" json:"emergencycontactrelaction,omitempty" validate:"required"`
-	Emergencycontactphoneno   string `bson:"emergencycontactphoneno,omitempty" json:"emergencycontactphoneno,omitempty" validate:"required"`
+	Emergencycontactphoneno   string `bson:"emergencycontactphoneno,omitempty" json:"emergencycontactphoneno,omitempty" validate:"required,e164"`
 	Emergencycontactaddress   string `bson:"emergencycontactaddress,omitempty" json:"emergencycontactaddress,omitempty" validate:"required"`
 }
 
@@ -80,22 +79,28 @@ type StudentRegistrationInsertPayloadPage1 struct {
 	parentsInformationForm
 	emergencyContactForm
 	Siblinglist []interface{} `bson:"siblinglist,omitempty" json:"siblinglist,omitempty" validate:"required"`
+	Ttdpage1    string        `bson:"ttdpage1,omitempty" json:"ttdpage1,omitempty" validate:"required"`
+}
+
+/* Page 2 */
+type StudentRegistrationInsertPayloadPage2 struct {
+	Ttdpage2 string `bson:"ttdpage2,omitempty" json:"ttdpage2,omitempty" validate:"required"`
 }
 
 /* Page 3 */
 type personalHealthInformationForm struct {
-	Bloodgroup               string `bson:"bloodgroup,omitempty" json:"bloodgroup,omitempty" validate:"required"`
-	Doctorname               string `bson:"doctorname,omitempty" json:"doctorname,omitempty" validate:"required"`
-	Doctorphone              string `bson:"doctorphone,omitempty" json:"doctorphone,omitempty" validate:"required"`
-	Doctoraddress            string `bson:"doctoraddress,omitempty" json:"doctoraddress,omitempty" validate:"required"`
+	Bloodgroup               string `bson:"bloodgroup,omitempty" json:"bloodgroup,omitempty"`
+	Doctorname               string `bson:"doctorname,omitempty" json:"doctorname,omitempty"`
+	Doctorphone              string `bson:"doctorphone,omitempty" json:"doctorphone,omitempty"`
+	Doctoraddress            string `bson:"doctoraddress,omitempty" json:"doctoraddress,omitempty"`
 	Medicationoption         string `bson:"medicationoption,omitempty" json:"medicationoption,omitempty" validate:"required"`
 	Isrecassmedicationoption string `bson:"isrecassmedicationoption,omitempty" json:"isrecassmedicationoption,omitempty" validate:"required"`
-	Naturemedication         string `bson:"naturemedication,omitempty" json:"naturemedication,omitempty" validate:"required"`
+	Naturemedication         string `bson:"naturemedication,omitempty" json:"naturemedication,omitempty"`
 }
 
 type medicalProblemForm struct {
-	Alergicoption               string   `bson:"alergicoption,omitempty" json:"alergicoption,omitempty" validate:"required"`
-	Natureofallergy             string   `bson:"natureofallergy,omitempty" json:"natureofallergy,omitempty" validate:"required"`
+	Alergicoption               string   `bson:"alergicoption,omitempty" json:"alergicoption,omitempty"`
+	Natureofallergy             string   `bson:"natureofallergy,omitempty" json:"natureofallergy,omitempty"`
 	Limitationofphysical        string   `bson:"limitationofphysical,omitempty" json:"limitationofphysical,omitempty" validate:"required"`
 	Limitationofphysicalexplain string   `bson:"limitationofphysicalexplain,omitempty" json:"limitationofphysicalexplain,omitempty"`
 	Surgeryoperation            string   `bson:"surgeryoperation,omitempty" json:"surgeryoperation,omitempty" validate:"required"`
@@ -107,22 +112,23 @@ type medicalProblemForm struct {
 type StudentRegistrationInsertPayloadPage3 struct {
 	personalHealthInformationForm
 	medicalProblemForm
+	Ttdpage3 string `bson:"ttdpage3,omitempty" json:"ttdpage3,omitempty" validate:"required"`
 }
 
 /* Page 4 */
 type recomendedForm struct {
 	Recommendedoption        string `bson:"recommendedoption,omitempty" json:"recommendedoption,omitempty" validate:"required"`
-	Btbparentnamerec         string `bson:"btbparentnamerec,omitempty" json:"btbparentnamerec,omitempty" validate:"required"`
-	Btbstudentnamerec        string `bson:"btbstudentnamerec,omitempty" json:"btbstudentnamerec,omitempty" validate:"required"`
-	Btbstudentgraderec       string `bson:"btbstudentgraderec,omitempty" json:"btbstudentgraderec,omitempty" validate:"required"`
-	Btbstudentphonehomerec   string `bson:"btbstudentphonehomerec,omitempty" json:"btbstudentphonehomerec,omitempty" validate:"required"`
-	Btbstudentphonemobilerec string `bson:"btbstudentphonemobilerec,omitempty" json:"btbstudentphonemobilerec,omitempty" validate:"required"`
+	Btbparentnamerec         string `bson:"btbparentnamerec,omitempty" json:"btbparentnamerec,omitempty"`
+	Btbstudentnamerec        string `bson:"btbstudentnamerec,omitempty" json:"btbstudentnamerec,omitempty"`
+	Btbstudentgraderec       string `bson:"btbstudentgraderec,omitempty" json:"btbstudentgraderec,omitempty"`
+	Btbstudentphonehomerec   string `bson:"btbstudentphonehomerec,omitempty" json:"btbstudentphonehomerec,omitempty"`
+	Btbstudentphonemobilerec string `bson:"btbstudentphonemobilerec,omitempty" json:"btbstudentphonemobilerec,omitempty"`
 }
 
 type StudentRegistrationInsertPayloadPage4 struct {
 	recomendedForm
 	Attachment []interface{} `bson:"attachment,omitempty" json:"attachment,omitempty" validate:"required"`
-	Ttd        string        `bson:"ttd,omitempty" json:"ttd,omitempty" validate:"required"`
+	Ttdpage4   string        `bson:"ttdpage4,omitempty" json:"ttdpage4,omitempty" validate:"required"`
 }
 
 /* Main Data */
