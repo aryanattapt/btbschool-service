@@ -127,7 +127,7 @@ type recomendedForm struct {
 
 type StudentRegistrationInsertPayloadPage4 struct {
 	recomendedForm
-	Attachment []interface{} `bson:"attachment,omitempty" json:"attachment,omitempty" validate:"required"`
+	Attachment []interface{} `bson:"attachment,omitempty" json:"attachment,omitempty"`
 	Ttdpage4   string        `bson:"ttdpage4,omitempty" json:"ttdpage4,omitempty" validate:"required"`
 }
 
