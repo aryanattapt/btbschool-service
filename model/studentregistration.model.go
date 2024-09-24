@@ -78,7 +78,7 @@ type StudentRegistrationInsertPayloadPage1 struct {
 	educationalBackgroundForm
 	parentsInformationForm
 	emergencyContactForm
-	Siblinglist []interface{} `bson:"siblinglist,omitempty" json:"siblinglist,omitempty" validate:"required"`
+	Siblinglist []interface{} `bson:"siblinglist,omitempty" json:"siblinglist,omitempty"`
 	Ttdpage1    string        `bson:"ttdpage1,omitempty" json:"ttdpage1,omitempty" validate:"required"`
 }
 
@@ -105,8 +105,8 @@ type medicalProblemForm struct {
 	Limitationofphysicalexplain string   `bson:"limitationofphysicalexplain,omitempty" json:"limitationofphysicalexplain,omitempty"`
 	Surgeryoperation            string   `bson:"surgeryoperation,omitempty" json:"surgeryoperation,omitempty" validate:"required"`
 	Surgeryoperationexplain     string   `bson:"surgeryoperationexplain,omitempty" json:"surgeryoperationexplain,omitempty"`
-	Medicalproblemoptions       []string `bson:"medicalproblemoptions,omitempty" json:"medicalproblemoptions,omitempty" validate:"required"`
-	Specificdisability          string   `bson:"specificdisability,omitempty" json:"specificdisability,omitempty" validate:"required"`
+	Medicalproblemoptions       []string `bson:"medicalproblemoptions,omitempty" json:"medicalproblemoptions,omitempty"`
+	Specificdisability          string   `bson:"specificdisability,omitempty" json:"specificdisability,omitempty"`
 }
 
 type StudentRegistrationInsertPayloadPage3 struct {
