@@ -136,6 +136,7 @@ type StudentRegistrationInsertPayload struct {
 	StudentRegistrationGenericPayload
 	StudentRegistrationInsertPayloadPage0
 	StudentRegistrationInsertPayloadPage1
+	StudentRegistrationInsertPayloadPage2
 	StudentRegistrationInsertPayloadPage3
 	StudentRegistrationInsertPayloadPage4
 }
