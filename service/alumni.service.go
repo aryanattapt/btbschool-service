@@ -5,6 +5,7 @@ import (
 	"btb-service/pkg"
 	"btb-service/repository"
 	"fmt"
+	"html/template"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -154,6 +155,34 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		})
 	}
 
+	var service = repository.ConfigRepositoryModel{ConfigModel: model.ConfigModel{Type: "general"}}
+	data, err := service.GetConfig(map[string]interface{}{
+		"type": "admincms.alumni.mailcontent",
+	})
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
+			"message": "Failed to get config data!",
+			"error":   err.Error(),
+		})
+	}
+
+	if len(data) == 0 {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
+			"message": "Failed to get mail content setting!",
+		})
+	}
+
+	mailContent, ok := data[0]["content"].(string)
+	if !ok {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
+			"message": "Failed to parse mail content setting!",
+		})
+	}
+	mailContent = fmt.Sprintf(mailContent, alumniData[0]["firstname"].(string), alumniData[0]["lastname"].(string), payload.AlumniID)
+
 	message := fmt.Sprintf(`
 		<html>
 		<head>
@@ -164,15 +193,10 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 			</style>
 		</head>
 		<body>
-			<div class="container">
-				<p>Dear Mr/Mrs, %s %s</p>
-				<p>Thank you for submit your alumni data. Your data is already verify with Alumni ID: <strong>%s</strong>.</p>
-				<p>Thank you,</p>
-				<p>Bina Tunas Bangsa School</p>
-			</div>
+			%s
 		</body>
 		</html>
-	`, alumniData[0]["firstname"].(string), alumniData[0]["lastname"].(string), payload.AlumniID)
+	`, template.HTML(mailContent))
 	var mailPayload pkg.MailPayload = pkg.MailPayload{
 		To:      []string{alumniData[0]["email"].(string)},
 		Cc:      []string{},

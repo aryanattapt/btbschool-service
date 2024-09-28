@@ -4,6 +4,7 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"errors"
+	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -35,12 +36,16 @@ func (payload ConfigRepositoryModel) UpsertConfig() (err error) {
 	for _, payload := range payload.Payload {
 		idPayload, ok := payload["_id"].(string)
 		mongoDBConfigRepository.Payload = payload
+		log.Println(idPayload)
 
 		if pkg.IsEmptyString(idPayload) || !ok {
 			err = mongoDBConfigRepository.InsertMongoDB()
 		} else {
 			delete(mongoDBConfigRepository.Payload, "_id")
-			id, _ := primitive.ObjectIDFromHex(idPayload)
+			id, errID := primitive.ObjectIDFromHex(idPayload)
+			if errID != nil {
+				return errID
+			}
 			mongoDBConfigRepository.Filter = bson.D{{Key: "_id", Value: id}}
 			err = mongoDBConfigRepository.UpdateMongoDB()
 		}
