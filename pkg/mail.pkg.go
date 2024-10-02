@@ -4,7 +4,6 @@ import (
 	"errors"
 	"os"
 	"strconv"
-	"strings"
 
 	"gopkg.in/gomail.v2"
 )
@@ -23,10 +22,10 @@ func (payload MailPayload) SendMail() (err error) {
 		err = errors.New("destination is empty")
 		return
 	} else {
-		m.SetHeader("To", strings.Join(payload.To, ","))
+		m.SetHeader("To", payload.To...)
 	}
 	if len(payload.Cc) != 0 {
-		m.SetHeader("Cc", strings.Join(payload.Cc, ","))
+		m.SetHeader("Cc", payload.Cc...)
 	}
 	m.SetHeader("Subject", payload.Subject)
 	m.SetBody("text/html", payload.Message)
