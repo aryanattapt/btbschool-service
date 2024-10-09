@@ -47,6 +47,44 @@ func GetAlumni(ctx *fiber.Ctx) error {
 	})
 }
 
+func ValidateAlumni(ctx *fiber.Ctx) error {
+	var payload = &model.AlumniInsertPayload{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
+		})
+	}
+
+	var goValidator = validator.New()
+	if err := goValidator.Struct(payload); err != nil {
+
+		var errorMessage string
+		for _, err := range err.(validator.ValidationErrors) {
+			fieldName := err.StructField()
+			switch err.Tag() {
+			case "required":
+				errorMessage += fieldName + " is required.<br/>"
+			case "email":
+				errorMessage += fieldName + " must be a valid email address.<br/>"
+			case "e164":
+				errorMessage += fieldName + " must be a valid Phone no<br/>"
+			default:
+				errorMessage += fieldName + " is invalid.<br/>"
+			}
+		}
+
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": errorMessage,
+			"error":   errorMessage,
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Success validate Alumni!"})
+}
+
 func SubmitAlumni(ctx *fiber.Ctx) error {
 	var payload = &model.AlumniInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {

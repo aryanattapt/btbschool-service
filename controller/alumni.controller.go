@@ -16,6 +16,16 @@ func GetAlumni(ctx *fiber.Ctx) error {
 	}
 }
 
+func ValidateAlumni(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.ValidateAlumni(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}
+
 func SubmitAlumni(ctx *fiber.Ctx) error {
 	if ctx.Method() == "POST" {
 		return service.SubmitAlumni(ctx)
