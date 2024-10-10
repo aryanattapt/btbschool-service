@@ -41,7 +41,7 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 		log.Println("data field is either missing or not a string")
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
-			"message": "The 'data' field is missing or not a valid string.",
+			"message": "Sorry, system can't parse your data! Please recheck!",
 		})
 	}
 

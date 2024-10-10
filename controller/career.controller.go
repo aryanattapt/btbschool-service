@@ -16,6 +16,16 @@ func GetCareerApplicantData(ctx *fiber.Ctx) error {
 	}
 }
 
+func ValidateApplyCareer(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.ValidateApplyCareer(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}
+
 func ApplyCareer(ctx *fiber.Ctx) error {
 	if ctx.Method() == "POST" {
 		return service.ApplyCareer(ctx)

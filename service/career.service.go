@@ -2,6 +2,7 @@ package service
 
 import (
 	"btb-service/model"
+	"btb-service/pkg"
 	"btb-service/repository"
 
 	"github.com/go-playground/validator/v10"
@@ -32,6 +33,30 @@ func GetCareerApplicantData(ctx *fiber.Ctx) error {
 	})
 }
 
+func ValidateApplyCareer(ctx *fiber.Ctx) error {
+	var payload = &model.CareerApplyInsertPayload{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "CAREER.APPLICANTINVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
+		})
+	}
+
+	var goValidator = validator.New()
+	if err := goValidator.Struct(payload); err != nil {
+		errorMessage := pkg.ValidateForm(err)
+
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "CAREER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Please check your submission data",
+			"error":   errorMessage,
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Success validate!"})
+}
+
 func ApplyCareer(ctx *fiber.Ctx) error {
 	var payload = &model.CareerApplyInsertPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
@@ -44,25 +69,11 @@ func ApplyCareer(ctx *fiber.Ctx) error {
 
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
-
-		var errorMessage string
-		for _, err := range err.(validator.ValidationErrors) {
-			fieldName := err.StructField()
-			switch err.Tag() {
-			case "required":
-				errorMessage += fieldName + " is required.<br/>"
-			case "email":
-				errorMessage += fieldName + " must be a valid email address.<br/>"
-			case "e164":
-				errorMessage += fieldName + " must be a valid Phone no<br/>"
-			default:
-				errorMessage += fieldName + " is invalid.<br/>"
-			}
-		}
+		errorMessage := pkg.ValidateForm(err)
 
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    "CAREER.INVALIDPAYLOAD.EXCEPTION",
-			"message": errorMessage,
+			"message": "Please check your submission data",
 			"error":   errorMessage,
 		})
 	}
