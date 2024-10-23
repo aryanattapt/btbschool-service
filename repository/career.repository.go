@@ -15,6 +15,7 @@ var mongodbCareerRepository = pkg.MongoDBDatabase{DatabaseName: "btb_client"}
 func GetCareerApplicantData() (data []map[string]interface{}, err error) {
 	mongodbCareerRepository.CollectionName = "career_applicant"
 	mongodbCareerRepository.Filter = bson.D{{}}
+	mongodbCareerRepository.Sort = map[string]interface{}{"registereddate": -1}
 	data, err = mongodbCareerRepository.GetMongoDB()
 	return
 }
@@ -22,6 +23,7 @@ func GetCareerApplicantData() (data []map[string]interface{}, err error) {
 func ApplyCareer(payload model.CareerApplyInsertPayload) (err error) {
 	mongodbCareerRepository.CollectionName = "career_applicant"
 	data, _ := pkg.StructToMap(payload)
+	data["registereddate"] = primitive.NewDateTimeFromTime(time.Now())
 	mongodbCareerRepository.Payload = data
 	err = mongodbCareerRepository.InsertMongoDB()
 	return
@@ -56,6 +58,7 @@ func GetActiveCareer(searchPayload map[string]interface{}) (data []map[string]in
 		mongodbCareerRepository.Filter = searchPayload
 	}
 
+	mongodbCareerRepository.Sort = map[string]interface{}{"registereddate": -1}
 	queryData, err := mongodbCareerRepository.GetMongoDB()
 	if err != nil {
 		log.Println(err.Error())
@@ -92,6 +95,7 @@ func GetAllCareer(searchPayload map[string]interface{}) (data []map[string]inter
 	} else {
 		mongodbCareerRepository.Filter = searchPayload
 	}
+	mongodbCareerRepository.Sort = map[string]interface{}{"registereddate": -1}
 	data, err = mongodbCareerRepository.GetMongoDB()
 	return
 }

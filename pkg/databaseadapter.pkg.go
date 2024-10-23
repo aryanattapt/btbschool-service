@@ -16,6 +16,7 @@ type MongoDBDatabase struct {
 	DatabaseName   string
 	CollectionName string
 	Payload        map[string]interface{}
+	Sort           map[string]interface{}
 	PayloadList    []interface{}
 	Filter         interface{}
 }
@@ -40,8 +41,11 @@ func (mongodbdatabase MongoDBDatabase) GetMongoDB() ([]map[string]interface{}, e
 		return nil, err
 	}
 
+	findOptions := options.Find()
+	findOptions.SetSort(mongodbdatabase.Sort)
+
 	defer mongodbdatabase.DisconnectMongoDB(db.Client())
-	cursor, err := db.Collection(mongodbdatabase.CollectionName).Find(ctx, mongodbdatabase.Filter)
+	cursor, err := db.Collection(mongodbdatabase.CollectionName).Find(ctx, mongodbdatabase.Filter, findOptions)
 	if err != nil {
 		return nil, err
 	}
