@@ -17,15 +17,15 @@ type CareerApplyInsertPayload struct {
 type CareerUpsertPayload struct {
 	ID               string             `bson:"_id,omitempty" json:"_id,omitempty"`
 	Jobtitlename     string             `bson:"jobtitlename,omitempty" json:"jobtitlename,omitempty" validate:"required,min=3,max=30"`
-	Experienced      string             `bson:"experienced,omitempty" json:"experienced,omitempty" validate:"required"`
+	Experienced      []interface{}      `bson:"experienced,omitempty" json:"experienced,omitempty" validate:"required"`
 	Jobcategory      string             `bson:"jobcategory,omitempty" json:"jobcategory,omitempty" validate:"required"`
 	Location         string             `bson:"location,omitempty" json:"location,omitempty" validate:"required"`
 	Jobsummary       string             `bson:"jobsummary,omitempty" json:"jobsummary,omitempty" validate:"required"`
 	Responsibilities string             `bson:"responsibilites,omitempty" json:"responsibilites,omitempty" validate:"required"`
 	MaximumApplyDate string             `bson:"maximumApplyDate,omitempty" json:"maximumApplyDate,omitempty" validate:"required"`
 	RegisteredDate   primitive.DateTime `bson:"registereddate,omitempty" json:"registereddate,omitempty"`
-	Jobtype          string             `bson:"jobtype,omitempty" json:"jobtype,omitempty" validate:"required"`
-	Experiencelevel  string             `bson:"experiencelevel,omitempty" json:"experiencelevel,omitempty" validate:"required"`
+	Jobtype          []interface{}      `bson:"jobtype,omitempty" json:"jobtype,omitempty" validate:"required"`
+	Experiencelevel  []interface{}      `bson:"experiencelevel,omitempty" json:"experiencelevel,omitempty" validate:"required"`
 	Requirement      string             `bson:"requirement,omitempty" json:"requirement,omitempty" validate:"required"`
 }
 
