@@ -4,6 +4,7 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"btb-service/repository"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -139,5 +140,51 @@ func Validate(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Success Validate Token!",
 		"data":    ctx.Locals("jwtauth"),
+	})
+}
+
+func CheckPermission(ctx *fiber.Ctx) error {
+	var payload = &model.UserCheckPermissionPayload{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
+		})
+	}
+
+	var goValidator = validator.New()
+	if err := goValidator.Struct(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
+		})
+	}
+
+	userauth := ctx.Locals("userauth").(map[string]interface{})
+	var userid string
+	if objID, ok := userauth["_id"].(primitive.ObjectID); ok {
+		userid = objID.Hex()
+	} else {
+		log.Println("user id not ok")
+	}
+
+	err := repository.CheckPermission(userid, payload.Permission)
+	if err != nil && err.Error() == "unauthorized" {
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"code":    "USER.SUBMIT.EXCEPTION",
+			"message": "Unauthorized Access",
+		})
+	} else if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "USER.PERMISSION.EXCEPTION",
+			"message": "Failed get data",
+			"error":   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Authorized!",
 	})
 }

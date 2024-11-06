@@ -11,6 +11,7 @@ type UserViewPayload struct {
 	UpdatedDate    primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
 	Role           string             `bson:"role,omitempty" json:"role,omitempty" validate:"required"`
 	IsActive       bool               `bson:"isactive,omitempty" json:"isactive,omitempty"`
+	Permission     []interface{}      `bson:"permission,omitempty" json:"permission,omitempty" validate:"required"`
 }
 
 type UserInsertPayload struct {

@@ -3,6 +3,8 @@ package repository
 import (
 	"btb-service/model"
 	"btb-service/pkg"
+	"errors"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -57,6 +59,7 @@ func UpdateUser(payload model.UserUpdatePayload) (err error) {
 		"role":        payload.Role,
 		"updateddate": payload.UpdatedDate,
 		"isactive":    payload.IsActive,
+		"permission":  payload.Permission,
 	}
 	err = mongoDBUserRepository.UpdateMongoDB()
 	return
@@ -72,5 +75,24 @@ func GetAllUser(searchPayload map[string]interface{}) (data []map[string]interfa
 		mongoDBUserRepository.Filter = searchPayload
 	}
 	data, err = mongoDBUserRepository.GetMongoDB()
+	return
+}
+
+func CheckPermission(userid string, permission string) (err error) {
+	id, _ := primitive.ObjectIDFromHex(userid)
+	mongoDBUserRepository.Filter = bson.M{
+		"isactive":   true,
+		"_id":        id,
+		"permission": permission,
+	}
+	log.Println(bson.M{
+		"isactive":   true,
+		"_id":        id,
+		"permission": permission,
+	})
+	data, err := mongoDBUserRepository.GetMongoDB()
+	if len(data) == 0 {
+		err = errors.New("unauthorized")
+	}
 	return
 }
