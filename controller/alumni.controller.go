@@ -45,3 +45,13 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		return MethodNotAllowedRoute(ctx)
 	}
 }
+
+func AlumniAction(ctx *fiber.Ctx) error {
+	if ctx.Method() == "DELETE" {
+		return service.DeleteAlumni(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}

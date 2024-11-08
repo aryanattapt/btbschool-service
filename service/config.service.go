@@ -148,6 +148,6 @@ func DeleteConfig(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Success upsert config",
+		"message": "Success delete config",
 	})
 }

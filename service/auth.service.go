@@ -131,7 +131,7 @@ func SignIn(ctx *fiber.Ctx) error {
 		"data": fiber.Map{
 			"type":       "Bearer",
 			"token":      jwtToken,
-			"expiredate": expiredDate,
+			"expiredate": expiredDate * 1000,
 		},
 	})
 }
@@ -147,7 +147,7 @@ func CheckPermission(ctx *fiber.Ctx) error {
 	var payload = &model.UserCheckPermissionPayload{}
 	if err := ctx.BodyParser(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"code":    "CHECKPERMISSION.INVALIDPAYLOAD.EXCEPTION",
 			"message": "Sorry, System can't parse your data! Please Recheck!",
 			"error":   err.Error(),
 		})
@@ -156,7 +156,7 @@ func CheckPermission(ctx *fiber.Ctx) error {
 	var goValidator = validator.New()
 	if err := goValidator.Struct(payload); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"code":    "USER.INVALIDPAYLOAD.EXCEPTION",
+			"code":    "CHECKPERMISSION.INVALIDPAYLOAD.EXCEPTION",
 			"message": "Parameter is required!",
 			"error":   err.Error(),
 		})
@@ -173,12 +173,12 @@ func CheckPermission(ctx *fiber.Ctx) error {
 	err := repository.CheckPermission(userid, payload.Permission)
 	if err != nil && err.Error() == "unauthorized" {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"code":    "USER.SUBMIT.EXCEPTION",
+			"code":    "CHECKPERMISSION.UNAUTHORIZED",
 			"message": "Unauthorized Access",
 		})
 	} else if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"code":    "USER.PERMISSION.EXCEPTION",
+			"code":    "CHECKPERMISSION.EXCEPTION",
 			"message": "Failed get data",
 			"error":   err.Error(),
 		})

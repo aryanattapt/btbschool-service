@@ -39,3 +39,12 @@ func VerifyAlumni(payload model.AlumniVerifyPayload) (err error) {
 	err = mongodbAlumniRepository.UpdateMongoDB()
 	return
 }
+
+func DeleteAlumni(payload model.AlumniDeletePayload) (err error) {
+	id, _ := primitive.ObjectIDFromHex(payload.ID)
+	mongodbAlumniRepository.Filter = map[string]interface{}{
+		"_id": id,
+	}
+	err = mongodbAlumniRepository.DeleteMongoDB()
+	return
+}

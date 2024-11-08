@@ -20,3 +20,7 @@ type AlumniVerifyPayload struct {
 	ID       string `bson:"_id,omitempty" json:"_id,omitempty" validate:"required"`
 	AlumniID string `bson:"alumniid,omitempty" json:"alumniid,omitempty" validate:"required"`
 }
+
+type AlumniDeletePayload struct {
+	ID string `bson:"_id,omitempty" json:"_id,omitempty" validate:"required"`
+}

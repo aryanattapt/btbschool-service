@@ -223,3 +223,35 @@ func VerifyAlumni(ctx *fiber.Ctx) error {
 		"message": "Success verify Alumni!",
 	})
 }
+
+func DeleteAlumni(ctx *fiber.Ctx) error {
+	var payload = &model.AlumniDeletePayload{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
+		})
+	}
+
+	var goValidator = validator.New()
+	if err := goValidator.Struct(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "ALUMNI.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Parameter is required!",
+			"error":   err.Error(),
+		})
+	}
+
+	if err := repository.DeleteAlumni(*payload); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "ALUMNI.DELETE.EXCEPTION",
+			"message": "Failed to delete alumni!",
+			"error":   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Success delete alumni",
+	})
+}
