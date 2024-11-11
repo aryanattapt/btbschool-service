@@ -9,7 +9,7 @@ type UserViewPayload struct {
 	Email          string             `bson:"email,omitempty" json:"email,omitempty" validate:"required,email"`
 	RegisteredDate primitive.DateTime `bson:"registereddate,omitempty" json:"registereddate,omitempty"`
 	UpdatedDate    primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
-	Role           string             `bson:"role,omitempty" json:"role,omitempty" validate:"required"`
+	Role           string             `bson:"role,omitempty" json:"role,omitempty"`
 	IsActive       bool               `bson:"isactive,omitempty" json:"isactive,omitempty"`
 	Permission     []interface{}      `bson:"permission,omitempty" json:"permission,omitempty" validate:"required"`
 }
