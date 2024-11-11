@@ -7,16 +7,14 @@ services:
       dockerfile: Dockerfile
       args:
         DOCKER_BUILDKIT: 0
-    # env_file: 
-    #   - .env
+    env_file: 
+      - .env.production
     ports:
       - "30001:30001"
     restart: always
     volumes:
-      # - ~/../apps/assets:/app/btbschool-service/assets
-      # - ~/../apps/uploads:/app/btbschool-service/uploads
-      - ~/../apps/assets:/app/assets
-      - ~/../apps/uploads:/app/uploads
+      - ~/../apps/assets:/app/btbschool-service/assets
+      - ~/../apps/uploads:/app/btbschool-service/uploads
     deploy:
       resources:
         limits:
