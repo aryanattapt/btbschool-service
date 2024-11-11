@@ -13,8 +13,10 @@ services:
       - "30001:30001"
     restart: always
     volumes:
-      - ~/../apps/assets:/app/btbschool-service/assets
-      - ~/../apps/uploads:/app/btbschool-service/uploads
+      # - ~/../apps/assets:/app/btbschool-service/assets
+      # - ~/../apps/uploads:/app/btbschool-service/uploads
+      - ~/../apps/assets:/app/assets
+      - ~/../apps/uploads:/app/uploads
     deploy:
       resources:
         limits:
