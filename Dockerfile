@@ -1,45 +1,58 @@
-# Specifies a parent image
-FROM golang:1.22.4
- 
-# Creates an app directory to hold your app’s source code
+# Stage 1: Build the Go binary
+FROM golang:1.22.4 AS builder
+
+# Set the current working directory inside the container
 WORKDIR /app/btbschool-service
 
-# Setting Environment Variable
-ENV DOMAIN=".aryanattapt.my.id"
-ENV PORT="30001"
-ENV ENV="PRODUCTION"
-ENV POSTGRESQL_HOST="localhost"
-ENV POSTGRESQL_PORT="20002"
-ENV POSTGRESQL_USERNAME="postgresql"
-ENV POSTGRESQL_PASSWORD="postgresql"
-ENV MONGODB_URL="mongodb://mongodb:mongodb@localhost:20001"
-ENV REDIS_URL=""
-ENV REDIS_PASSWORD=""
-ENV ASSET_PATH="./assets"
-ENV UPLOAD_PATH="./uploads"
-ENV JWT_SIGNATURE_KEY="SIGNATURE"
-ENV MAIL_SMTP_HOST=""
-ENV MAIL_SMTP_PORT=""
-ENV MAIL_SENDER_NAME=""
-ENV MAIL_AUTH_EMAIL=""
-ENV MAIL_AUTH_PASSWORD=""
-ENV API_BASE_URL="localhost:30001"
-ENV RECAPTCHA_SITE_KEY="6Lc5SikqAAAAAIury1pPE5QsX1ilLuyVL8MsXdd_"
-ENV RECAPTCHA_SECRET_KEY="6Lc5SikqAAAAAE3pIs6vKTMZGZgqtSj43E1bTUwY"
+# Set environment variables
+ENV DOMAIN=".aryanattapt.my.id" \
+    PORT="30001" \
+    ENV="PRODUCTION" \
+    POSTGRESQL_HOST="localhost" \
+    POSTGRESQL_PORT="20002" \
+    POSTGRESQL_USERNAME="postgresql" \
+    POSTGRESQL_PASSWORD="postgresql" \
+    MONGODB_URL="mongodb://mongodb:mongodb@localhost:20001" \
+    REDIS_URL="" \
+    REDIS_PASSWORD="" \
+    ASSET_PATH="./assets" \
+    UPLOAD_PATH="./uploads" \
+    JWT_SIGNATURE_KEY="SIGNATURE" \
+    MAIL_SMTP_HOST="" \
+    MAIL_SMTP_PORT="" \
+    MAIL_SENDER_NAME="" \
+    MAIL_AUTH_EMAIL="" \
+    MAIL_AUTH_PASSWORD="" \
+    API_BASE_URL="localhost:30001" \
+    RECAPTCHA_SITE_KEY="6Lc5SikqAAAAAIury1pPE5QsX1ilLuyVL8MsXdd_" \
+    RECAPTCHA_SECRET_KEY="6Lc5SikqAAAAAE3pIs6vKTMZGZgqtSj43E1bTUwY"
 
-# Copies everything from your root directory into /app
-COPY . .
- 
-# Installs Go dependencies
+# Copy go.mod and go.sum to leverage Docker cache for dependencies
+COPY go.mod go.sum ./
+
+# Download and cache dependencies
 RUN go mod download
-RUN go mod tidy
- 
-# Builds your app with optional configuration
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the Go binary
 RUN go build -o btbschool-service
 
-# Tells Docker which network port your container listens on
+# Stage 2: Create the final image with only the binary
+FROM alpine:latest
+
+# Install necessary dependencies (e.g., for running Go binary in Alpine)
+RUN apk add --no-cache libc6-compat
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the binary from the builder stage
+COPY --from=builder /app/btbschool-service /app/
+
+# Expose the port the app will run on
 EXPOSE 30001
 
-# Specifies the executable command that runs when the container starts
-#CMD [ “/app/btbschool-service/btbschool-service ]
-ENTRYPOINT ["/app/btbschool-service/btbschool-service"]
+# Set the entry point to run the Go binary
+ENTRYPOINT ["/app/btbschool-service"]
