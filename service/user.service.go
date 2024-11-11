@@ -56,7 +56,7 @@ func InsertUser(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "Success USER!",
+		"message": "Success insert user!",
 	})
 }
 
@@ -122,6 +122,6 @@ func UpdateUser(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "Success submit data!",
+		"message": "Success update user!",
 	})
 }
