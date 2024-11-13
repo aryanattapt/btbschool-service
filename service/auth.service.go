@@ -188,3 +188,32 @@ func CheckPermission(ctx *fiber.Ctx) error {
 		"message": "Authorized!",
 	})
 }
+
+func GetAdminMenus(ctx *fiber.Ctx) error {
+	userauth := ctx.Locals("userauth").(map[string]interface{})
+	var usersPermission []string
+
+	if perm, ok := userauth["permission"]; ok {
+		if permArray, ok := perm.(primitive.A); ok {
+			for _, p := range permArray {
+				if permission, ok := p.(string); ok {
+					usersPermission = append(usersPermission, permission)
+				}
+			}
+		}
+	}
+
+	data, err := repository.GetAdminMenu(usersPermission)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "ADMINMENU.QUERY.EXCEPTION",
+			"message": "Failed get data",
+			"error":   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Success!",
+		"data":    data,
+	})
+}

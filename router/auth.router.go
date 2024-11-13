@@ -13,4 +13,5 @@ func AuthRouter(app *fiber.App) {
 	authRouter.All("/signup", middleware.BasicAuthMiddleware(), controller.SignUp)
 	authRouter.All("/validate", middleware.JWTAuthMiddleware(), controller.Validate)
 	authRouter.All("/checkpermission", middleware.JWTAuthMiddleware(), controller.CheckPermission)
+	authRouter.All("/checkadminmenus", middleware.JWTAuthMiddleware(), controller.GetAdminMenus)
 }

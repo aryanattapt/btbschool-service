@@ -45,3 +45,13 @@ func CheckPermission(ctx *fiber.Ctx) error {
 		return MethodNotAllowedRoute(ctx)
 	}
 }
+
+func GetAdminMenus(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.GetAdminMenus(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}

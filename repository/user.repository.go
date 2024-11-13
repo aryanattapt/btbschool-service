@@ -4,7 +4,6 @@ import (
 	"btb-service/model"
 	"btb-service/pkg"
 	"errors"
-	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -85,11 +84,7 @@ func CheckPermission(userid string, permission string) (err error) {
 		"_id":        id,
 		"permission": permission,
 	}
-	log.Println(bson.M{
-		"isactive":   true,
-		"_id":        id,
-		"permission": permission,
-	})
+
 	data, err := mongoDBUserRepository.GetMongoDB()
 	if len(data) == 0 {
 		err = errors.New("unauthorized")
