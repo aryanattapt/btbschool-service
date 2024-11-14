@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"mime/multipart"
 	"os"
 
@@ -12,6 +13,7 @@ import (
 )
 
 func CreateSessionS3() (sess *session.Session, err error) {
+	log.Println("create session", os.Getenv("S3_ENDPOINT"), os.Getenv("AWS_ACCESS_KEY_ID"), os.Getenv("AWS_SECRET_ACCESS_KEY"))
 	sess, err = session.NewSession(&aws.Config{
 		Endpoint: aws.String(os.Getenv("S3_ENDPOINT")),
 		Credentials: credentials.NewStaticCredentials(
@@ -19,6 +21,7 @@ func CreateSessionS3() (sess *session.Session, err error) {
 			os.Getenv("AWS_SECRET_ACCESS_KEY"),
 			"",
 		),
+		Region: aws.String(os.Getenv("AWS_REGION")),
 	})
 	return
 }
