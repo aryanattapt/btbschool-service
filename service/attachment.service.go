@@ -97,7 +97,7 @@ func UploadAttachmentS3(ctx *fiber.Ctx) error {
 		for _, file := range fileHeaders {
 			filename := strings.Replace(pkg.GenerateUUID(), "-", "", -1)
 			fileExt := path.Ext(file.Filename)
-			fileName := fmt.Sprintf("%s.%s", filename, fileExt)
+			fileName := fmt.Sprintf("%s%s", filename, fileExt)
 
 			theFile, err := file.Open()
 			if err != nil {
