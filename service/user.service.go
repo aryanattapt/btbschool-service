@@ -46,7 +46,7 @@ func InsertUser(ctx *fiber.Ctx) error {
 	}
 
 	payload.Password = pkg.HashPasswordBCrypt(payload.Password)
-	payload.IsActive = true
+	payload.IsActive = "active"
 	if err := repository.SaveUser(*payload); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    "USER.REGISTERUSER.EXCEPTION",

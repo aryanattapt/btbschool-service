@@ -16,7 +16,7 @@ var (
 
 func GetUserByUsernameOrEmail(username string, email string) (data []map[string]interface{}, err error) {
 	mongoDBUserRepository.Filter = bson.M{
-		"isactive": true,
+		"isactive": "active",
 		"$or": bson.A{
 			bson.M{"username": username},
 			bson.M{"email": email},
@@ -29,7 +29,7 @@ func GetUserByUsernameOrEmail(username string, email string) (data []map[string]
 func GetUserById(userid string) (data []map[string]interface{}, err error) {
 	id, _ := primitive.ObjectIDFromHex(userid)
 	mongoDBUserRepository.Filter = bson.M{
-		"isactive": true,
+		"isactive": "active",
 		"_id":      id,
 	}
 	data, err = mongoDBUserRepository.GetMongoDB()
@@ -38,7 +38,7 @@ func GetUserById(userid string) (data []map[string]interface{}, err error) {
 
 func SaveUser(payload model.UserInsertPayload) (err error) {
 	payload.RegisteredDate = primitive.NewDateTimeFromTime(time.Now())
-	payload.IsActive = true
+	payload.IsActive = "active"
 	data, _ := pkg.StructToMap(payload)
 	mongoDBUserRepository.Payload = data
 	err = mongoDBUserRepository.InsertMongoDB()
