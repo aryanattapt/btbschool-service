@@ -80,7 +80,7 @@ func GetAllUser(searchPayload map[string]interface{}) (data []map[string]interfa
 func CheckPermission(userid string, permission string) (err error) {
 	id, _ := primitive.ObjectIDFromHex(userid)
 	mongoDBUserRepository.Filter = bson.M{
-		"isactive":   true,
+		"isactive":   "active",
 		"_id":        id,
 		"permission": permission,
 	}

@@ -10,7 +10,7 @@ type UserViewPayload struct {
 	RegisteredDate primitive.DateTime `bson:"registereddate,omitempty" json:"registereddate,omitempty"`
 	UpdatedDate    primitive.DateTime `bson:"updateddate,omitempty" json:"updateddate,omitempty"`
 	Role           string             `bson:"role,omitempty" json:"role,omitempty"`
-	IsActive       bool               `bson:"isactive,omitempty" json:"isactive,omitempty"`
+	IsActive       string             `bson:"isactive,omitempty" json:"isactive,omitempty"`
 	Permission     []interface{}      `bson:"permission,omitempty" json:"permission,omitempty" validate:"required"`
 }
 
