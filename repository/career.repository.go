@@ -55,6 +55,8 @@ func GetActiveCareer(searchPayload map[string]interface{}) (data []map[string]in
 		delete(searchPayload, "_id")
 		mongodbCareerRepository.Filter = bson.D{{Key: "_id", Value: id}}
 	} else {
+		today := pkg.FormatTime(time.Now().Truncate(24*time.Hour), "2006-01-02")
+		searchPayload["maximumApplyDate"] = bson.M{"$gte": today}
 		mongodbCareerRepository.Filter = searchPayload
 	}
 
@@ -65,23 +67,7 @@ func GetActiveCareer(searchPayload map[string]interface{}) (data []map[string]in
 		return
 	}
 
-	for _, v := range queryData {
-		maximumApplyDate, ok := v["maximumApplyDate"].(string)
-		if ok {
-			compareDate, err := pkg.CompareIsoDateStringToNow(maximumApplyDate)
-			if err != nil {
-				log.Println(err.Error())
-				continue
-			}
-
-			if compareDate >= 0 {
-				data = append(data, v)
-			}
-		} else {
-			log.Println("not ok")
-		}
-	}
-
+	data = queryData
 	return
 }
 
