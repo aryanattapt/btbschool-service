@@ -1,13 +1,12 @@
 package service
 
 import (
+	"btb-service/repository"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -38,15 +37,32 @@ func ValidateRecaptchaGoogle(ctx *fiber.Ctx) error {
 	// Extract the "data" field from the map and assert its type
 	data, ok := payload["data"].(string)
 	if !ok {
-		log.Println("data field is either missing or not a string")
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"code":    "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
-			"message": "Sorry, system can't parse your data! Please recheck!",
+			"message": "Please make sure you are already verify captcha",
+		})
+	}
+
+	//Query Config
+	config, err := repository.GetRecaptchaConfig()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
+			"message": "Failed get config",
+			"error":   err.Error(),
+		})
+	}
+
+	secretkey, ok := config["recaptchasecretkey"].(string)
+	if !ok {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "GOOGLE.INVALIDPAYLOAD.DATA_FIELD_INVALID",
+			"message": "Failed get secret key",
 		})
 	}
 
 	// Prepare the request to Google's reCAPTCHA API
-	finalPayload := fmt.Sprintf("secret=%s&response=%s", os.Getenv("RECAPTCHA_SECRET_KEY"), data)
+	finalPayload := fmt.Sprintf("secret=%s&response=%s", secretkey, data)
 	req, err := http.NewRequest("POST", "https://www.google.com/recaptcha/api/siteverify", bytes.NewBufferString(finalPayload))
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

@@ -81,6 +81,7 @@ func main() {
 	router.InstagramRouter(app)
 	router.UserRouter(app)
 	router.GoogleRouter(app)
+	router.SecretKeyRouter(app)
 	app.Get("/metrics", monitor.New())
 	app.Use(controller.NotFoundRoute)
 
