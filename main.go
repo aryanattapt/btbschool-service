@@ -7,7 +7,6 @@ import (
 	"btb-service/service"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,15 +18,14 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 )
 
 func main() {
 	/* Load Env For DEV */
-	if err := godotenv.Load(); err != nil {
+	/* if err := godotenv.Load(); err != nil {
 		log.Panic(err.Error())
-	}
+	} */
 
 	/* Initialize Fiber */
 	app := fiber.New(fiber.Config{
