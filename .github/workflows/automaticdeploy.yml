@@ -1,0 +1,42 @@
+name: automaticdeploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  automaticdeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Automatic Deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/../aryanattapt/btbschool-service
+            if ! git reset --hard; then
+              echo "Git reset failed. Exiting process..."
+              exit 1;
+            fi
+
+            if ! git pull origin master; then
+              echo "Git pull failed. exit the process..."
+              exit 1;
+            fi
+            
+            if ! docker stop btbschool-service; then
+              echo "btbschool-service stop failed. continue process..."
+            fi
+
+            if ! docker system prune -af; then
+              echo "btbschool-service clean up failed. continue process..."
+            fi
+            
+            if ! docker compose up -d; then
+              echo "btbschool-service build up failed. continue process..."
+            fi

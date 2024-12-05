@@ -19,7 +19,7 @@ services:
       resources:
         limits:
           cpus: '0.1'
-          memory: 32M
+          memory: 256M
     networks:
        - aryanattapt-network
         

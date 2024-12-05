@@ -26,9 +26,13 @@ func RefreshTokenInstagram() {
 			log.Println("Failed to decode json : ", err.Error())
 		} else {
 			newToken, _ := resultInJSON["access_token"].(string)
-			err = repository.UpdateInstagramToken(newToken)
-			if err != nil {
-				log.Println("Failed update token : ", err.Error())
+			if !pkg.IsEmptyString(newToken) {
+				err = repository.UpdateInstagramToken(newToken)
+				if err != nil {
+					log.Println("Failed update token : ", err.Error())
+				}
+			} else {
+				log.Println("new token is empty.. not update data")
 			}
 		}
 	} else {
