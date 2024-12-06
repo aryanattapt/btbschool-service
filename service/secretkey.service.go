@@ -100,3 +100,50 @@ func UpdateRecaptchaConfig(ctx *fiber.Ctx) error {
 		"message": "Success save recaptcha config",
 	})
 }
+
+func GetInstagramConfig(ctx *fiber.Ctx) error {
+	data, err := repository.GetInstagramConfig()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "FETCHCONFIG.CONFIGQUERY.EXCEPTION",
+			"message": "Failed to get instagram config data!",
+			"error":   err.Error(),
+		})
+	}
+
+	if len(data) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"code":    "FETCHCONFIG.CONFIGNOTEXIST.EXCEPTION",
+			"message": "Sorry, we can't find any instagram config data. Please try again later!",
+			"error":   "Data not found",
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Success get instagram config",
+		"data":    data,
+	})
+}
+
+func UpdateInstagramConfig(ctx *fiber.Ctx) error {
+	var payload = &model.SecretKeyPayload{}
+	if err := ctx.BodyParser(payload); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"code":    "SAVECONFIG.INVALIDPAYLOAD.EXCEPTION",
+			"message": "Sorry, System can't parse your data! Please Recheck!",
+			"error":   err.Error(),
+		})
+	}
+
+	if err := repository.UpdateInstagramConfig(*payload); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"code":    "SAVECONFIG.UPSERTCONFIG.EXCEPTION",
+			"message": "Failed to save instagram config!",
+			"error":   err.Error(),
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Success save instagram config",
+	})
+}

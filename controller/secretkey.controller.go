@@ -45,3 +45,23 @@ func UpdateRecaptchaConfig(ctx *fiber.Ctx) error {
 		return MethodNotAllowedRoute(ctx)
 	}
 }
+
+func GetInstagramConfig(ctx *fiber.Ctx) error {
+	if ctx.Method() == "POST" {
+		return service.GetInstagramConfig(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}
+
+func UpdateInstagramConfig(ctx *fiber.Ctx) error {
+	if ctx.Method() == "PUT" {
+		return service.UpdateInstagramConfig(ctx)
+	} else if ctx.Method() == "OPTIONS" {
+		return NoContentRoute(ctx)
+	} else {
+		return MethodNotAllowedRoute(ctx)
+	}
+}

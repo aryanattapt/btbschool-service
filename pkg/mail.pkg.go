@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"errors"
-	"os"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -30,20 +29,6 @@ func (payload MailPayload) SendMail() (err error) {
 		return
 	}
 	data = queryData[0]
-
-	m := gomail.NewMessage()
-	m.SetHeader("From", os.Getenv("MAIL_AUTH_EMAIL"))
-	if len(payload.To) == 0 {
-		err = errors.New("destination is empty")
-		return
-	} else {
-		m.SetHeader("To", payload.To...)
-	}
-	if len(payload.Cc) != 0 {
-		m.SetHeader("Cc", payload.Cc...)
-	}
-	m.SetHeader("Subject", payload.Subject)
-	m.SetBody("text/html", payload.Message)
 
 	smtpemail, ok := data["smtpemail"].(string)
 	if !ok {
@@ -73,6 +58,20 @@ func (payload MailPayload) SendMail() (err error) {
 	if err != nil {
 		return
 	}
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", smtpemail)
+	if len(payload.To) == 0 {
+		err = errors.New("destination is empty")
+		return
+	} else {
+		m.SetHeader("To", payload.To...)
+	}
+	if len(payload.Cc) != 0 {
+		m.SetHeader("Cc", payload.Cc...)
+	}
+	m.SetHeader("Subject", payload.Subject)
+	m.SetBody("text/html", payload.Message)
 
 	d := gomail.NewDialer(smtphost, smtpPort, smtpemail, smtppassword)
 	return d.DialAndSend(m)

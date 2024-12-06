@@ -13,4 +13,6 @@ func SecretKeyRouter(app *fiber.App) {
 	secretKeyRouter.All("/emailconfig/update", controller.UpdateEmailConfig)
 	secretKeyRouter.All("/recaptcha/fetch", controller.GetRecaptchaConfig)
 	secretKeyRouter.All("/recaptcha/update", controller.UpdateRecaptchaConfig)
+	secretKeyRouter.All("/instagram/fetch", controller.GetInstagramConfig)
+	secretKeyRouter.All("/instagram/update", controller.UpdateInstagramConfig)
 }
