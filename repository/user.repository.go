@@ -60,6 +60,11 @@ func UpdateUser(payload model.UserUpdatePayload) (err error) {
 		"isactive":    payload.IsActive,
 		"permission":  payload.Permission,
 	}
+
+	if !pkg.IsEmptyString(payload.Password) {
+		mongoDBUserRepository.Payload["password"] = pkg.HashPasswordBCrypt(payload.Password)
+	}
+
 	err = mongoDBUserRepository.UpdateMongoDB()
 	return
 }

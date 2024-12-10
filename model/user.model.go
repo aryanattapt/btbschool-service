@@ -20,6 +20,7 @@ type UserInsertPayload struct {
 }
 
 type UserUpdatePayload struct {
-	ID string `bson:"_id,omitempty" json:"_id,omitempty" validate:"required"`
+	ID       string `bson:"_id,omitempty" json:"_id,omitempty" validate:"required"`
+	Password string `bson:"password,omitempty" json:"password,omitempty"`
 	UserViewPayload
 }
